@@ -24,7 +24,7 @@ const Sidebar: React.FC = () => {
       links.push(
         { name: 'Groups', to: '/director/groups', icon: <Users className="w-5 h-5" /> },
         { name: 'Courses', to: '/courses', icon: <BookOpen className="w-5 h-5" /> },
-        { name: 'Timetable', to: '/timetable', icon: <Calendar className="w-5 h-5" /> }
+        { name: 'Timetable', to: '/director/timetable', icon: <Calendar className="w-5 h-5" /> }
       );
     }
 

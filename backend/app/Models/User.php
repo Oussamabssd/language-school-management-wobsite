@@ -129,11 +129,6 @@ class User extends Authenticatable
         return $this->hasMany(Announcement::class, 'author_id');
     }
 
-    public function registrations(): HasMany
-    {
-        return $this->hasMany(Registration::class);
-    }
-
     // Parent-Student relationships
     public function children(): BelongsToMany
     {

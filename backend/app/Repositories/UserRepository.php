@@ -45,7 +45,7 @@ class UserRepository extends BaseRepository
     {
         return $this->model
             ->whereHas('roles', fn($q) => $q->where('name', 'student'))
-            ->with(['groups', 'registrations', 'parents'])
+            ->with(['groups', 'parents'])
             ->paginate($perPage);
     }
 

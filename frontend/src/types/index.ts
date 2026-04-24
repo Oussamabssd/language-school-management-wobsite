@@ -68,3 +68,32 @@ export interface PaginatedResponse<T> {
     next: string | null;
   };
 }
+
+export interface Group {
+  id: number;
+  name: string;
+  level_id: number;
+  teacher_id?: number;
+  max_students: number;
+  academic_year: string;
+  status: 'active' | 'inactive' | 'completed';
+  level?: Level;
+  teacher?: User;
+  students?: User[];
+  created_at: string;
+}
+
+export interface Timetable {
+  id: number;
+  group_id: number;
+  course_id?: number;
+  teacher_id: number;
+  day_of_week: 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
+  start_time: string;
+  end_time: string;
+  room?: string;
+  academic_year: string;
+  is_active: boolean;
+  group?: Group;
+  teacher?: User;
+}

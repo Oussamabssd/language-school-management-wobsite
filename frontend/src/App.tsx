@@ -10,10 +10,11 @@ import DashboardHome from './pages/DashboardHome';
 import PublicRegistration from './pages/PublicRegistration';
 import AdminRegistrations from './pages/admin/AdminRegistrations';
 import AdminUsers from './pages/admin/AdminUsers';
+import DirectorGroups from './pages/director/DirectorGroups';
+import DirectorTimetable from './pages/director/DirectorTimetable';
 
 // Placeholder components for routing
 const Courses = () => <div className="p-6"><h1 className="text-2xl font-bold">Courses</h1></div>;
-const Timetable = () => <div className="p-6"><h1 className="text-2xl font-bold">Timetable</h1></div>;
 const Unauthorized = () => <div className="p-6"><h1 className="text-2xl font-bold text-red-600">Unauthorized Access</h1></div>;
 
 const App: React.FC = () => {
@@ -30,7 +31,6 @@ const App: React.FC = () => {
           <Route element={<ProtectedRoute />}>
             <Route element={<DashboardLayout />}>
               <Route path="/" element={<DashboardHome />} />
-              <Route path="/timetable" element={<Timetable />} />
               
               {/* Admin Routes */}
               <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
@@ -38,7 +38,13 @@ const App: React.FC = () => {
                 <Route path="/admin/registrations" element={<AdminRegistrations />} />
               </Route>
               
-              {/* Director/Teacher Routes */}
+              {/* Director Routes */}
+              <Route element={<ProtectedRoute allowedRoles={['admin', 'director']} />}>
+                <Route path="/director/groups" element={<DirectorGroups />} />
+                <Route path="/director/timetable" element={<DirectorTimetable />} />
+              </Route>
+              
+              {/* Teacher Routes */}
               <Route element={<ProtectedRoute allowedRoles={['admin', 'director', 'teacher']} />}>
                 <Route path="/courses" element={<Courses />} />
               </Route>
