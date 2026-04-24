@@ -12,6 +12,7 @@ import AdminRegistrations from './pages/admin/AdminRegistrations';
 import AdminUsers from './pages/admin/AdminUsers';
 import DirectorGroups from './pages/director/DirectorGroups';
 import DirectorTimetable from './pages/director/DirectorTimetable';
+import StudentDashboard from './pages/dashboards/StudentDashboard';
 
 // Placeholder components for routing
 const Courses = () => <div className="p-6"><h1 className="text-2xl font-bold">Courses</h1></div>;
@@ -47,6 +48,11 @@ const App: React.FC = () => {
               {/* Teacher Routes */}
               <Route element={<ProtectedRoute allowedRoles={['admin', 'director', 'teacher']} />}>
                 <Route path="/courses" element={<Courses />} />
+              </Route>
+              
+              {/* Student Routes */}
+              <Route element={<ProtectedRoute allowedRoles={['student']} />}>
+                <Route path="/student/dashboard" element={<StudentDashboard />} />
               </Route>
               
             </Route>

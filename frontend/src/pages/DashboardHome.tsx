@@ -2,6 +2,7 @@ import React from 'react';
 import { useAuth } from '../context/AuthContext';
 import AdminDashboard from './dashboards/AdminDashboard';
 import TeacherDashboard from './dashboards/TeacherDashboard';
+import StudentDashboard from './dashboards/StudentDashboard';
 import { motion } from 'framer-motion';
 
 const DashboardHome: React.FC = () => {
@@ -9,6 +10,7 @@ const DashboardHome: React.FC = () => {
 
   if (hasRole('admin')) return <AdminDashboard />;
   if (hasRole('teacher')) return <TeacherDashboard />;
+  if (hasRole('student')) return <StudentDashboard />;
   
   // Generic dashboard for other roles (to be expanded)
   return (

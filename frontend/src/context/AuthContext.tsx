@@ -21,19 +21,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const storedToken = localStorage.getItem('token');
-    const storedUser = localStorage.getItem('user');
+    const initAuth = async () => {
+      const storedToken = localStorage.getItem('token');
+      const storedUser = localStorage.getItem('user');
 
-    if (storedToken && storedUser) {
-      setToken(storedToken);
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch (e) {
-        localStorage.removeItem('user');
-        localStorage.removeItem('token');
+      if (storedToken) {
+        setToken(storedToken);
+        // Set interceptor token before fetching
+        api.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`;
+        
+        try {
+          // Fetch fresh user data to ensure groups/roles are up to date
+          const response = await api.get('/auth/me');
+          const freshUser = response.data.data;
+          setUser(freshUser);
+          localStorage.setItem('user', JSON.stringify(freshUser));
+        } catch (e) {
+          console.error('Failed to refresh user data', e);
+          if (storedUser) {
+            try {
+              setUser(JSON.parse(storedUser));
+            } catch (parseError) {
+              logout();
+            }
+          }
+        }
       }
-    }
-    setIsLoading(false);
+      setIsLoading(false);
+    };
+
+    initAuth();
   }, []);
 
   const login = (newToken: string, newUser: User) => {

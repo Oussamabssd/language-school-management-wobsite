@@ -71,8 +71,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/groups/{groupId}/students/{studentId}', [GroupController::class, 'removeStudent']);
     });
 
-    // ── Courses & Assignments (Director, Teacher) ──────────
-    Route::middleware('role:admin,director,teacher')->group(function () {
+    // ── Courses & Assignments (Director, Teacher, Student) ──
+    Route::middleware('role:admin,director,teacher,student,parent')->group(function () {
         Route::apiResource('courses', CourseController::class);
         Route::get('/courses/teacher/{teacherId}', [CourseController::class, 'byTeacher']);
         Route::get('/courses/group/{groupId}', [CourseController::class, 'byGroup']);

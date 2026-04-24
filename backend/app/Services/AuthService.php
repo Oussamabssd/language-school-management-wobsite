@@ -34,7 +34,7 @@ class AuthService
         $token = $user->createToken('auth-token', $this->getAbilitiesForUser($user));
 
         return [
-            'user' => $user->load('roles'),
+            'user' => $user->load(['roles', 'groups', 'groups.level']),
             'token' => $token->plainTextToken,
         ];
     }

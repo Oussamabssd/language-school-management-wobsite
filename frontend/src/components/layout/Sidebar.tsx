@@ -37,10 +37,11 @@ const Sidebar: React.FC = () => {
     }
 
     if (hasRole('student')) {
+      // Replace default Dashboard with student specific one
+      if (links[0].to === '/') links.shift();
       links.push(
-        { name: 'My Courses', to: '/student/courses', icon: <BookOpen className="w-5 h-5" /> },
-        { name: 'Timetable', to: '/timetable', icon: <Calendar className="w-5 h-5" /> },
-        { name: 'Grades', to: '/student/grades', icon: <GraduationCap className="w-5 h-5" /> }
+        { name: 'My Academic', to: '/', icon: <BookOpen className="w-5 h-5" /> },
+        { name: 'My Grades', to: '/student/grades', icon: <GraduationCap className="w-5 h-5" /> }
       );
     }
 
@@ -82,7 +83,7 @@ const Sidebar: React.FC = () => {
       <nav className="flex-1 px-4 space-y-1 overflow-y-auto">
         {getNavLinks().map((link) => (
           <NavLink
-            key={link.to}
+            key={`${link.to}-${link.name}`}
             to={link.to}
             className={({ isActive }) =>
               `flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 ${

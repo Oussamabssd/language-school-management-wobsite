@@ -12,6 +12,7 @@ export interface User {
   roles: Role[];
   is_active: boolean;
   must_change_password: boolean;
+  groups?: Group[];
 }
 
 export interface Role {
@@ -96,4 +97,16 @@ export interface Timetable {
   is_active: boolean;
   group?: Group;
   teacher?: User;
+}
+
+export interface Course {
+  id: number;
+  title: string;
+  description: string;
+  start_date?: string;
+  end_date?: string;
+  status: 'draft' | 'active' | 'completed' | 'archived';
+  group?: Group;
+  teacher?: User;
+  created_at: string;
 }
