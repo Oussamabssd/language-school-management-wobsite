@@ -9,9 +9,9 @@ import ProtectedRoute from './components/layout/ProtectedRoute';
 import DashboardHome from './pages/DashboardHome';
 import PublicRegistration from './pages/PublicRegistration';
 import AdminRegistrations from './pages/admin/AdminRegistrations';
+import AdminUsers from './pages/admin/AdminUsers';
 
 // Placeholder components for routing
-const Users = () => <div className="p-6"><h1 className="text-2xl font-bold">Users Management</h1></div>;
 const Courses = () => <div className="p-6"><h1 className="text-2xl font-bold">Courses</h1></div>;
 const Timetable = () => <div className="p-6"><h1 className="text-2xl font-bold">Timetable</h1></div>;
 const Unauthorized = () => <div className="p-6"><h1 className="text-2xl font-bold text-red-600">Unauthorized Access</h1></div>;
@@ -34,7 +34,7 @@ const App: React.FC = () => {
               
               {/* Admin Routes */}
               <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
-                <Route path="/admin/users" element={<Users />} />
+                <Route path="/admin/users" element={<AdminUsers />} />
                 <Route path="/admin/registrations" element={<AdminRegistrations />} />
               </Route>
               

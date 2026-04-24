@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\LanguageController;
 use App\Http\Controllers\Api\LevelController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\RegistrationController;
+use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\TimetableController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
@@ -43,6 +44,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // ── Users & Roles (Admin) ──────────────────────────────
     Route::middleware('role:admin')->group(function () {
+        Route::get('/roles', [RoleController::class, 'index']);
         Route::apiResource('users', UserController::class);
         Route::patch('/users/{id}/toggle-status', [UserController::class, 'toggleStatus']);
         Route::post('/users/{userId}/roles/{roleId}', [UserController::class, 'assignRole']);

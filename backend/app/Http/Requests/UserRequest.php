@@ -30,11 +30,7 @@ class UserRequest extends FormRequest
             'roles.*' => ['exists:roles,id'],
         ];
 
-        if ($this->isMethod('POST')) {
-            $rules['password'] = ['required', 'string', 'min:8'];
-        } else {
-            $rules['password'] = ['nullable', 'string', 'min:8'];
-        }
+        $rules['password'] = ['nullable', 'string', 'min:8'];
 
         return $rules;
     }

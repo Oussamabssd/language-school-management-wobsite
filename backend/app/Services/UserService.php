@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Repositories\UserRepository;
 use App\Models\User;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 
 class UserService
 {
@@ -27,17 +29,28 @@ class UserService
 
     public function createUser(array $data): User
     {
+        if (empty($data['password'])) {
+            $data['password'] = Str::random(10);
+            $data['must_change_password'] = true;
+        }
+
         $user = $this->userRepository->create($data);
 
         if (isset($data['roles'])) {
             $user->roles()->sync($data['roles']);
         }
 
+        // In a real app, you would send an email here with the generated password
+        // Mail::to($user->email)->send(new NewAccountCreated($user, $generatedPassword));
+
         return $user->load('roles');
     }
 
     public function updateUser(int $id, array $data): User
     {
+        if (empty($data['password'])) {
+            unset($data['password']);
+        }
         $user = $this->userRepository->update($id, $data);
 
         if (isset($data['roles'])) {

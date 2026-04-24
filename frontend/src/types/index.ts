@@ -4,8 +4,14 @@ export interface User {
   first_name: string;
   last_name: string;
   email: string;
+  phone?: string;
+  address?: string;
+  city?: string;
+  date_of_birth?: string;
   avatar?: string;
   roles: Role[];
+  is_active: boolean;
+  must_change_password: boolean;
 }
 
 export interface Role {
