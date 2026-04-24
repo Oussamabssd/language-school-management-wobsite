@@ -110,6 +110,16 @@ const Login: React.FC = () => {
                 )}
               </button>
             </form>
+
+            <div className="mt-8 pt-6 border-t border-slate-700/50 text-center">
+              <p className="text-slate-400 text-sm mb-4">New student?</p>
+              <button 
+                onClick={() => navigate('/register-request')}
+                className="w-full py-3 px-4 bg-white/5 hover:bg-white/10 text-white rounded-xl font-medium border border-slate-600 transition-all duration-200"
+              >
+                Apply for Registration
+              </button>
+            </div>
           </div>
         </div>
       </motion.div>

@@ -13,12 +13,26 @@ class RegistrationRequest extends FormRequest
 
     public function rules(): array
     {
-        return [
-            'user_id' => ['required', 'exists:users,id'],
-            'language_id' => ['required', 'exists:languages,id'],
-            'level_id' => ['nullable', 'exists:levels,id'],
-            'motivation' => ['nullable', 'string'],
-            'previous_experience' => ['nullable', 'string'],
-        ];
+        if ($this->isMethod('post')) {
+            return [
+                'full_name' => 'required|string|max:255',
+                'email' => 'required|email|max:255',
+                'phone' => 'required|string|max:20',
+                'date_of_birth' => 'required|date',
+                'address' => 'required|string',
+                'password' => 'required|string|min:8',
+                'language_id' => 'required|exists:languages,id',
+                'level_id' => 'nullable|exists:levels,id',
+            ];
+        }
+
+        if ($this->isMethod('put') || $this->isMethod('patch')) {
+            return [
+                'status' => 'required|in:accepted,rejected',
+                'rejection_reason' => 'required_if:status,rejected|string|nullable',
+            ];
+        }
+
+        return [];
     }
 }

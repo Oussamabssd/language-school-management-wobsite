@@ -7,6 +7,8 @@ import Login from './pages/auth/Login';
 import DashboardLayout from './components/layout/DashboardLayout';
 import ProtectedRoute from './components/layout/ProtectedRoute';
 import DashboardHome from './pages/DashboardHome';
+import PublicRegistration from './pages/PublicRegistration';
+import AdminRegistrations from './pages/admin/AdminRegistrations';
 
 // Placeholder components for routing
 const Users = () => <div className="p-6"><h1 className="text-2xl font-bold">Users Management</h1></div>;
@@ -21,6 +23,7 @@ const App: React.FC = () => {
         <Toaster position="top-right" />
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/register-request" element={<PublicRegistration />} />
           <Route path="/unauthorized" element={<Unauthorized />} />
 
           {/* Protected Routes inside Dashboard Layout */}
@@ -32,6 +35,7 @@ const App: React.FC = () => {
               {/* Admin Routes */}
               <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
                 <Route path="/admin/users" element={<Users />} />
+                <Route path="/admin/registrations" element={<AdminRegistrations />} />
               </Route>
               
               {/* Director/Teacher Routes */}

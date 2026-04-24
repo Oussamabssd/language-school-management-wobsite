@@ -27,6 +27,11 @@ Route::prefix('auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
 });
 
+// Guest registration & Language selection
+Route::post('/registrations', [RegistrationController::class, 'store']);
+Route::get('/languages', [LanguageController::class, 'index']);
+Route::get('/languages/{languageId}/levels', [LevelController::class, 'byLanguage']);
+
 // ── Authenticated Routes ───────────────────────────────────
 Route::middleware('auth:sanctum')->group(function () {
 
@@ -56,9 +61,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // ── Languages, Levels, Groups (Director) ───────────────
     Route::middleware('role:admin,director')->group(function () {
-        Route::apiResource('languages', LanguageController::class);
-        Route::apiResource('levels', LevelController::class);
-        Route::get('/languages/{languageId}/levels', [LevelController::class, 'byLanguage']);
+        Route::apiResource('languages', LanguageController::class)->except(['index']);
+        Route::apiResource('levels', LevelController::class)->except(['index']);
 
         Route::apiResource('groups', GroupController::class);
         Route::post('/groups/{groupId}/students/{studentId}', [GroupController::class, 'addStudent']);
@@ -124,20 +128,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/timetables/group/{groupId}', [TimetableController::class, 'byGroup']);
     Route::get('/timetables/teacher/{teacherId}', [TimetableController::class, 'byTeacher']);
 
-    // ── Registrations ───────────────────────────────────────
+    // ── Registrations (Admin) ───────────────────────────────
     Route::middleware('role:admin')->group(function () {
         Route::get('/registrations', [RegistrationController::class, 'index']);
-        Route::get('/registrations/pending', [RegistrationController::class, 'pending']);
-        Route::post('/registrations/{id}/approve', [RegistrationController::class, 'approve']);
-        Route::post('/registrations/{id}/reject', [RegistrationController::class, 'reject']);
-    });
-
-    Route::get('/registrations/{id}', [RegistrationController::class, 'show'])
-        ->middleware('role:admin,student');
-
-    // Student self-registration
-    Route::middleware('role:student')->group(function () {
-        Route::post('/registrations', [RegistrationController::class, 'store']);
-        Route::get('/my-registrations', [RegistrationController::class, 'myRegistrations']);
+        Route::get('/registrations/{id}', [RegistrationController::class, 'show']);
+        Route::put('/registrations/{id}/accept', [RegistrationController::class, 'accept']);
+        Route::put('/registrations/{id}/reject', [RegistrationController::class, 'reject']);
     });
 });

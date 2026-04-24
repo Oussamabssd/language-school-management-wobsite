@@ -11,15 +11,16 @@ class RegistrationResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'full_name' => $this->full_name,
+            'email' => $this->email,
+            'phone' => $this->phone,
+            'date_of_birth' => $this->date_of_birth?->toDateString(),
+            'address' => $this->address,
             'status' => $this->status,
-            'motivation' => $this->motivation,
-            'previous_experience' => $this->previous_experience,
             'rejection_reason' => $this->rejection_reason,
             'reviewed_at' => $this->reviewed_at?->toISOString(),
-            'user' => new UserResource($this->whenLoaded('user')),
             'language' => new LanguageResource($this->whenLoaded('language')),
             'level' => new LevelResource($this->whenLoaded('level')),
-            'group' => new GroupResource($this->whenLoaded('group')),
             'reviewer' => new UserResource($this->whenLoaded('reviewer')),
             'created_at' => $this->created_at->toISOString(),
         ];

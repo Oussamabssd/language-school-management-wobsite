@@ -11,19 +11,17 @@ class Registration extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'language_id', 'level_id', 'group_id',
-        'status', 'motivation', 'previous_experience',
-        'rejection_reason', 'reviewed_by', 'reviewed_at'
+        'full_name', 'email', 'phone', 'date_of_birth',
+        'address', 'password', 'language_id', 'level_id',
+        'status', 'rejection_reason', 'reviewed_by', 'reviewed_at'
     ];
 
     protected function casts(): array
     {
-        return ['reviewed_at' => 'datetime'];
-    }
-
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
+        return [
+            'reviewed_at' => 'datetime',
+            'date_of_birth' => 'date',
+        ];
     }
 
     public function language(): BelongsTo
@@ -34,11 +32,6 @@ class Registration extends Model
     public function level(): BelongsTo
     {
         return $this->belongsTo(Level::class);
-    }
-
-    public function group(): BelongsTo
-    {
-        return $this->belongsTo(Group::class);
     }
 
     public function reviewer(): BelongsTo

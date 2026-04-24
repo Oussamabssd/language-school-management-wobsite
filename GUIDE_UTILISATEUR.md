@@ -25,6 +25,10 @@ Pour utiliser l'application sur votre machine locale, vous devez lancer les deux
    ```
    *L'interface web sera accessible sur `http://localhost:5173`.*
 
+### Inscription Publique
+Les nouveaux étudiants peuvent s'inscrire sans compte via :
+**`http://localhost:5173/register-request`** (Accès libre, pas de connexion requise).
+
 ---
 
 ## 🔑 2. Comptes de Démonstration (Identifiants de Test)
@@ -67,7 +71,7 @@ Voici les comptes disponibles pour tester les différents tableaux de bord :
 
 ### 🎓 Espace Étudiant (`ahmed@student.com`)
 * **Tableau de Bord :** Dès la connexion, l'étudiant voit son prochain cours, ses dernières notes, et les devoirs à rendre.
-* **S'inscrire à un nouveau cours :** L'étudiant peut utiliser le formulaire d'inscription pour demander à rejoindre une nouvelle langue ou un niveau supérieur (nécessite l'approbation de l'admin).
+* **Nouvelle Inscription (Candidats) :** Les nouveaux élèves utilisent la page publique **`/register-request`** pour soumettre leur candidature. Une fois validée par l'administration, ils recevront leurs accès par email.
 
 ### 👪 Espace Parent (`parent@ecole.com`)
 * **Suivi des enfants :** Sélectionnez l'enfant dans le menu déroulant (s'il y en a plusieurs) pour voir son profil scolaire.
