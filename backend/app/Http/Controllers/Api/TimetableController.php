@@ -48,4 +48,9 @@ class TimetableController extends Controller
     {
         return $this->success(TimetableResource::collection($this->timetableService->getByTeacher($teacherId)));
     }
+
+    public function byStudent(int $studentId): JsonResponse
+    {
+        return $this->success(TimetableResource::collection($this->timetableService->getByStudent($studentId)));
+    }
 }

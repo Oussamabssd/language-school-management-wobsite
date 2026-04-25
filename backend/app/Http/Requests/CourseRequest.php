@@ -17,10 +17,11 @@ class CourseRequest extends FormRequest
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'group_id' => ['required', 'exists:groups,id'],
-            'teacher_id' => ['required', 'exists:users,id'],
+            'teacher_id' => ['nullable', 'exists:users,id'],
             'start_date' => ['nullable', 'date'],
-            'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
+            'end_date' => ['nullable', 'date'],
             'status' => ['nullable', 'in:draft,active,completed,archived'],
+            'file' => ['nullable', 'file', 'mimes:pdf,doc,docx', 'max:5120'],
         ];
     }
 }

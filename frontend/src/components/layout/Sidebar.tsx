@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { 
   Users, BookOpen, Calendar, CreditCard, Bell, 
-  Home, LogOut, GraduationCap, ClipboardList 
+  Home, LogOut, GraduationCap, ClipboardList, FileText
 } from 'lucide-react';
 
 const Sidebar: React.FC = () => {
@@ -30,8 +30,9 @@ const Sidebar: React.FC = () => {
 
     if (hasRole('teacher')) {
       links.push(
-        { name: 'My Courses', to: '/teacher/courses', icon: <BookOpen className="w-5 h-5" /> },
+        { name: 'My Courses', to: '/courses', icon: <BookOpen className="w-5 h-5" /> },
         { name: 'Timetable', to: '/timetable', icon: <Calendar className="w-5 h-5" /> },
+        { name: 'Homework', to: '/teacher/assignments', icon: <FileText className="w-5 h-5" /> },
         { name: 'Grades', to: '/teacher/grades', icon: <GraduationCap className="w-5 h-5" /> }
       );
     }
@@ -41,7 +42,8 @@ const Sidebar: React.FC = () => {
       if (links[0].to === '/') links.shift();
       links.push(
         { name: 'My Academic', to: '/', icon: <BookOpen className="w-5 h-5" /> },
-        { name: 'My Grades', to: '/student/grades', icon: <GraduationCap className="w-5 h-5" /> }
+        { name: 'My Homework', to: '/student/homework', icon: <FileText className="w-5 h-5" /> },
+        { name: 'Exam Results', to: '/student/grades', icon: <GraduationCap className="w-5 h-5" /> }
       );
     }
 

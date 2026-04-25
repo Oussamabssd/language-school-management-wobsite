@@ -27,10 +27,12 @@ class GroupRepository extends BaseRepository
     public function addStudent(int $groupId, int $studentId, array $pivotData = [])
     {
         $group = $this->findOrFail($groupId);
-        $group->students()->attach($studentId, array_merge([
-            'enrolled_at' => now()->toDateString(),
-            'status' => 'active',
-        ], $pivotData));
+        $group->students()->syncWithoutDetaching([
+            $studentId => array_merge([
+                'enrolled_at' => now()->toDateString(),
+                'status' => 'active',
+            ], $pivotData)
+        ]);
         return $group->fresh('students');
     }
 

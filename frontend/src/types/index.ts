@@ -104,6 +104,7 @@ export interface Course {
   id: number;
   title: string;
   description: string;
+  file_path?: string | null;
   start_date?: string;
   end_date?: string;
   status: 'draft' | 'active' | 'completed' | 'archived';

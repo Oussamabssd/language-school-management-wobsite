@@ -63,6 +63,11 @@ class TimetableService
         return $this->timetableRepository->getByTeacher($teacherId);
     }
 
+    public function getByStudent(int $studentId)
+    {
+        return $this->timetableRepository->getByStudent($studentId);
+    }
+
     private function checkForConflicts(array $data, ?int $excludeId = null): void
     {
         if (isset($data['teacher_id'], $data['day_of_week'], $data['start_time'], $data['end_time'])) {

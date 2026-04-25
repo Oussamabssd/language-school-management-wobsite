@@ -17,10 +17,11 @@ class AbsenceRequest extends FormRequest
             'student_id' => ['required', 'exists:users,id'],
             'group_id' => ['required', 'exists:groups,id'],
             'course_id' => ['nullable', 'exists:courses,id'],
+            'timetable_id' => ['nullable', 'exists:timetables,id'],
             'date' => ['required', 'date'],
             'status' => ['required', 'in:absent,late,excused,present'],
             'reason' => ['nullable', 'string'],
-            'marked_by' => ['required', 'exists:users,id'],
+            'marked_by' => ['nullable', 'exists:users,id'],
         ];
     }
 }

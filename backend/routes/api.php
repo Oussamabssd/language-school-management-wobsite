@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AbsenceController;
 use App\Http\Controllers\Api\AnnouncementController;
 use App\Http\Controllers\Api\AssignmentController;
+use App\Http\Controllers\Api\AssignmentSubmissionController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\ExamController;
@@ -79,6 +80,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::apiResource('assignments', AssignmentController::class);
         Route::get('/assignments/course/{courseId}', [AssignmentController::class, 'byCourse']);
+        
+        // Assignment Submissions & Grading
+        Route::get('/assignments/{id}/submissions', [AssignmentSubmissionController::class, 'getByAssignment']);
+        Route::post('/assignments/{id}/students/{studentId}/grade', [AssignmentSubmissionController::class, 'storeGrade']);
+        Route::get('/students/{id}/homework-grades', [AssignmentSubmissionController::class, 'getStudentGrades']);
     });
 
     // ── Exams & Grades (Director, Teacher) ──────────────────
@@ -97,7 +103,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // ── Absences (Teacher, Admin, Director) ─────────────────
     Route::middleware('role:admin,director,teacher')->group(function () {
         Route::apiResource('absences', AbsenceController::class);
+        Route::post('/absences/bulk', [AbsenceController::class, 'markBulk']);
         Route::get('/absences/group/{groupId}', [AbsenceController::class, 'byGroup']);
+        Route::get('/absences/timetable/{timetableId}/{date}', [AbsenceController::class, 'byTimetable']);
     });
 
     // ── Absences (Student/Parent view) ─────────────────────
@@ -129,6 +137,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // ── Timetable (view for all authenticated) ──────────────
     Route::get('/timetables/group/{groupId}', [TimetableController::class, 'byGroup']);
     Route::get('/timetables/teacher/{teacherId}', [TimetableController::class, 'byTeacher']);
+    Route::get('/timetables/student/{studentId}', [TimetableController::class, 'byStudent']);
 
     // ── Registrations (Admin) ───────────────────────────────
     Route::middleware('role:admin')->group(function () {

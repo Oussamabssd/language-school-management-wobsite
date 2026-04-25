@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Repositories\AssignmentRepository;
 use App\Models\Assignment;
 
+use Illuminate\Support\Facades\Storage;
+
 class AssignmentService
 {
     public function __construct(
@@ -27,11 +29,23 @@ class AssignmentService
 
     public function create(array $data): Assignment
     {
+        if (isset($data['file'])) {
+            $data['file_path'] = $data['file']->store('assignments', 'public');
+            unset($data['file']);
+        }
         return $this->assignmentRepository->create($data);
     }
 
     public function update(int $id, array $data): Assignment
     {
+        if (isset($data['file'])) {
+            $assignment = $this->getById($id);
+            if ($assignment->file_path) {
+                Storage::disk('public')->delete($assignment->file_path);
+            }
+            $data['file_path'] = $data['file']->store('assignments', 'public');
+            unset($data['file']);
+        }
         return $this->assignmentRepository->update($id, $data);
     }
 

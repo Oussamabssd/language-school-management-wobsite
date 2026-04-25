@@ -9,19 +9,24 @@ import {
   X
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import toast from 'react-hot-toast';
 
 const TeacherDashboard: React.FC = () => {
   const { user } = useAuth();
   const [timetables, setTimetables] = useState<Timetable[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
+  const [selectedSession, setSelectedSession] = useState<Timetable | null>(null);
+  const [sessionAttendance, setSessionAttendance] = useState<Record<number, {status: string, reason: string}>>({});
+  const [savingAttendance, setSavingAttendance] = useState(false);
 
   const fetchTeacherData = async () => {
     if (!user) return;
 
     try {
       const timetableRes = await api.get<ApiResponse<Timetable[]>>(`/timetables/teacher/${user.id}`);
-      setTimetables(timetableRes.data.data);
+      const timetableData = (timetableRes.data.data as any).data || timetableRes.data.data;
+      setTimetables(Array.isArray(timetableData) ? timetableData : []);
     } catch (error) {
       console.error('Failed to load teacher data', error);
     } finally {
@@ -32,6 +37,59 @@ const TeacherDashboard: React.FC = () => {
   useEffect(() => {
     fetchTeacherData();
   }, [user]);
+
+  const handleOpenAttendance = async (session: Timetable) => {
+    setSelectedSession(session);
+    setSessionAttendance({});
+    try {
+      const today = new Date().toISOString().split('T')[0];
+      const res = await api.get<ApiResponse<any[]>>(`/absences/timetable/${session.id}/${today}`);
+      const existing = res.data.data;
+      const initial: Record<number, {status: string, reason: string}> = {};
+      existing.forEach((abs: any) => {
+        initial[abs.student_id] = { status: abs.status, reason: abs.reason || '' };
+      });
+      setSessionAttendance(initial);
+    } catch (error) {
+      console.error('Failed to load existing attendance');
+    }
+  };
+
+  const handleSaveAttendance = async () => {
+    if (!selectedSession) return;
+    setSavingAttendance(true);
+    try {
+      const today = new Date().toISOString().split('T')[0];
+      const absences = Object.entries(sessionAttendance).map(([studentId, data]) => ({
+        student_id: parseInt(studentId),
+        status: data.status,
+        reason: data.reason
+      }));
+
+      await api.post('/absences/bulk', {
+        timetable_id: selectedSession.id,
+        date: today,
+        absences
+      });
+      toast.success('Attendance updated');
+      setSelectedSession(null);
+    } catch (error) {
+      toast.error('Failed to update attendance');
+    } finally {
+      setSavingAttendance(false);
+    }
+  };
+
+  const toggleAttendance = (studentId: number) => {
+    setSessionAttendance(prev => {
+      const current = prev[studentId]?.status;
+      const nextStatus = current === 'absent' ? 'present' : 'absent';
+      return {
+        ...prev,
+        [studentId]: { status: nextStatus, reason: '' }
+      };
+    });
+  };
 
   if (loading) {
     return (
@@ -137,7 +195,7 @@ const TeacherDashboard: React.FC = () => {
                     return a.start_time.localeCompare(b.start_time);
                   })
                   .map((item) => (
-                    <div key={item.id} className="p-5 hover:bg-slate-50 transition-colors">
+                    <div key={item.id} className="p-5 hover:bg-slate-50 transition-colors group/item">
                       <div className="flex justify-between items-start mb-3">
                         <span className="px-2 py-1 bg-primary-100 text-primary-700 rounded-lg text-[10px] font-bold uppercase tracking-wider">
                           {item.day_of_week}
@@ -149,9 +207,17 @@ const TeacherDashboard: React.FC = () => {
                       </div>
                       <div className="space-y-2">
                         <h4 className="font-bold text-slate-800">{item.group?.name || 'Group Session'}</h4>
-                        <div className="flex items-center gap-2 text-sm text-slate-500">
-                          <MapPin className="w-4 h-4 text-slate-400" />
-                          Room: {item.room || 'N/A'}
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2 text-sm text-slate-500">
+                            <MapPin className="w-4 h-4 text-slate-400" />
+                            Room: {item.room || 'N/A'}
+                          </div>
+                          <button 
+                            onClick={() => handleOpenAttendance(item)}
+                            className="text-xs font-bold text-primary-600 hover:text-primary-700 opacity-0 group-hover/item:opacity-100 transition-all flex items-center gap-1 bg-primary-50 px-2 py-1 rounded-lg"
+                          >
+                            Mark Attendance
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -219,6 +285,91 @@ const TeacherDashboard: React.FC = () => {
                   className="px-6 py-2 bg-white border border-slate-200 rounded-xl font-bold text-slate-700 hover:bg-slate-50 transition-colors"
                 >
                   Close
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Attendance Modal */}
+      <AnimatePresence>
+        {selectedSession && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedSession(null)}
+              className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
+            />
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden"
+            >
+              <div className="p-6 border-b border-slate-100 bg-slate-50/50">
+                <div className="flex justify-between items-center mb-1">
+                  <h3 className="text-xl font-bold text-slate-800">Attendance Marking</h3>
+                  <button onClick={() => setSelectedSession(null)} className="p-2 hover:bg-slate-200 rounded-xl"><X className="w-5 h-5 text-slate-500" /></button>
+                </div>
+                <p className="text-sm text-slate-500">
+                  {selectedSession.group?.name} • {selectedSession.day_of_week} • {selectedSession.start_time.substring(0, 5)}
+                </p>
+              </div>
+
+              <div className="p-6 max-h-[60vh] overflow-y-auto space-y-3">
+                {(!selectedSession.group?.students || selectedSession.group.students.length === 0) ? (
+                  <p className="text-center py-8 text-slate-400 italic font-medium">No students in this group.</p>
+                ) : (
+                  selectedSession.group.students.map((student) => {
+                    const isAbsent = sessionAttendance[student.id]?.status === 'absent';
+                    return (
+                      <div 
+                        key={student.id} 
+                        onClick={() => toggleAttendance(student.id)}
+                        className={`flex items-center justify-between p-4 rounded-2xl border transition-all cursor-pointer ${
+                          isAbsent ? 'bg-red-50 border-red-100' : 'bg-green-50 border-green-100'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm ${
+                            isAbsent ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'
+                          }`}>
+                            {student.first_name[0]}{student.last_name[0]}
+                          </div>
+                          <div>
+                            <p className="font-bold text-slate-800 text-sm">{student.first_name} {student.last_name}</p>
+                            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                              {isAbsent ? 'Absent' : 'Present'}
+                            </p>
+                          </div>
+                        </div>
+                        <div className={`w-6 h-6 rounded-lg flex items-center justify-center border-2 ${
+                          isAbsent ? 'bg-red-600 border-red-600 text-white' : 'bg-white border-green-200'
+                        }`}>
+                          {isAbsent && <X className="w-4 h-4" />}
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+
+              <div className="p-6 bg-slate-50 border-t border-slate-100 flex gap-3">
+                <button 
+                  onClick={() => setSelectedSession(null)}
+                  className="flex-1 px-6 py-3 bg-white border border-slate-200 rounded-2xl font-bold text-slate-700 hover:bg-slate-100 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button 
+                  onClick={handleSaveAttendance}
+                  disabled={savingAttendance || !selectedSession.group?.students?.length}
+                  className="flex-1 px-6 py-3 bg-primary-600 text-white rounded-2xl font-bold hover:bg-primary-700 transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary-200 disabled:opacity-50"
+                >
+                  {savingAttendance ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Save Attendance'}
                 </button>
               </div>
             </motion.div>

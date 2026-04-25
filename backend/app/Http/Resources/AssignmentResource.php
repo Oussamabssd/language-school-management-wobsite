@@ -14,10 +14,11 @@ class AssignmentResource extends JsonResource
             'title' => $this->title,
             'description' => $this->description,
             'due_date' => $this->due_date?->toISOString(),
-            'file_path' => $this->file_path,
+            'file_path' => $this->file_path ? asset('storage/' . $this->file_path) : null,
             'status' => $this->status,
             'course' => new CourseResource($this->whenLoaded('course')),
             'teacher' => new UserResource($this->whenLoaded('teacher')),
+            'submissions' => AssignmentSubmissionResource::collection($this->whenLoaded('submissions')),
             'created_at' => $this->created_at->toISOString(),
         ];
     }

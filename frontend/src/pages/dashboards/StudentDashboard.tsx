@@ -22,16 +22,13 @@ const StudentDashboard: React.FC = () => {
     }
 
     try {
-      // For now, let's assume the student is in one main group
-      const mainGroupId = user.groups[0].id;
-      
       const [coursesRes, timetableRes] = await Promise.all([
-        api.get<ApiResponse<Course[]>>(`/courses/group/${mainGroupId}`),
-        api.get<ApiResponse<Timetable[]>>(`/timetables/group/${mainGroupId}`)
+        api.get<ApiResponse<Course[]>>(user.groups?.[0]?.id ? `/courses/group/${user.groups[0].id}` : `/courses/teacher/${user.id}`), // Placeholder for courses
+        api.get<ApiResponse<Timetable[]>>(`/timetables/student/${user.id}`)
       ]);
 
-      setCourses(coursesRes.data.data);
-      setTimetables(timetableRes.data.data);
+      setCourses(Array.isArray(coursesRes.data.data) ? coursesRes.data.data : []);
+      setTimetables(Array.isArray(timetableRes.data.data) ? timetableRes.data.data : []);
     } catch (error) {
       console.error('Failed to load student data', error);
     } finally {

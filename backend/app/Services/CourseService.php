@@ -25,11 +25,19 @@ class CourseService
 
     public function create(array $data): Course
     {
+        if (isset($data['file']) && $data['file'] instanceof \Illuminate\Http\UploadedFile) {
+            $path = $data['file']->store('courses', 'public');
+            $data['file_path'] = '/storage/' . $path;
+        }
         return $this->courseRepository->create($data);
     }
 
     public function update(int $id, array $data): Course
     {
+        if (isset($data['file']) && $data['file'] instanceof \Illuminate\Http\UploadedFile) {
+            $path = $data['file']->store('courses', 'public');
+            $data['file_path'] = '/storage/' . $path;
+        }
         return $this->courseRepository->update($id, $data);
     }
 

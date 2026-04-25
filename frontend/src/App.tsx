@@ -14,8 +14,13 @@ import DirectorGroups from './pages/director/DirectorGroups';
 import DirectorTimetable from './pages/director/DirectorTimetable';
 import StudentDashboard from './pages/dashboards/StudentDashboard';
 
-// Placeholder components for routing
-const Courses = () => <div className="p-6"><h1 className="text-2xl font-bold">Courses</h1></div>;
+import TeacherCourses from './pages/teacher/TeacherCourses';
+import TeacherAssignments from './pages/teacher/TeacherAssignments';
+import StudentHomework from './pages/student/StudentHomework';
+import StudentExamNotes from './pages/student/StudentExamNotes';
+
+const Timetable = () => <div className="p-6"><h1 className="text-2xl font-bold">Timetable</h1></div>;
+const TeacherGrades = () => <div className="p-6"><h1 className="text-2xl font-bold">Manage Grades</h1></div>;
 const Unauthorized = () => <div className="p-6"><h1 className="text-2xl font-bold text-red-600">Unauthorized Access</h1></div>;
 
 const App: React.FC = () => {
@@ -45,14 +50,21 @@ const App: React.FC = () => {
                 <Route path="/director/timetable" element={<DirectorTimetable />} />
               </Route>
               
-              {/* Teacher Routes */}
+              {/* Common/Teacher Routes */}
               <Route element={<ProtectedRoute allowedRoles={['admin', 'director', 'teacher']} />}>
-                <Route path="/courses" element={<Courses />} />
+                <Route path="/courses" element={<TeacherCourses />} />
+                <Route path="/teacher/courses" element={<TeacherCourses />} />
+                <Route path="/assignments" element={<TeacherAssignments />} />
+                <Route path="/teacher/assignments" element={<TeacherAssignments />} />
+                <Route path="/teacher/grades" element={<TeacherGrades />} />
+                <Route path="/timetable" element={<Timetable />} />
               </Route>
               
               {/* Student Routes */}
               <Route element={<ProtectedRoute allowedRoles={['student']} />}>
                 <Route path="/student/dashboard" element={<StudentDashboard />} />
+                <Route path="/student/homework" element={<StudentHomework />} />
+                <Route path="/student/grades" element={<StudentExamNotes />} />
               </Route>
               
             </Route>

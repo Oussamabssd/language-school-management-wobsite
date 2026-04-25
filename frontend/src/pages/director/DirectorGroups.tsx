@@ -87,7 +87,7 @@ const DirectorGroups: React.FC = () => {
     setEditingGroup(group);
     setFormData({
       name: group.name,
-      level_id: group.level_id.toString(),
+      level_id: group.level_id?.toString() || '',
       teacher_id: group.teacher_id?.toString() || '',
       max_students: group.max_students,
       academic_year: group.academic_year,

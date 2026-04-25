@@ -21,7 +21,12 @@ class CourseController extends Controller
 
     public function store(CourseRequest $request): JsonResponse
     {
-        return $this->success(new CourseResource($this->courseService->create($request->validated())), 'Course created', 201);
+        $data = $request->validated();
+        if (!isset($data['teacher_id'])) {
+            $data['teacher_id'] = auth()->id();
+        }
+        $course = $this->courseService->create($data);
+        return $this->success(new CourseResource($course), 'Course created', 201);
     }
 
     public function show(int $id): JsonResponse

@@ -19,7 +19,7 @@ class AssignmentRequest extends FormRequest
             'course_id' => ['required', 'exists:courses,id'],
             'teacher_id' => ['required', 'exists:users,id'],
             'due_date' => ['nullable', 'date'],
-            'file_path' => ['nullable', 'string'],
+            'file' => ['nullable', 'file', 'mimes:pdf,doc,docx', 'max:5120'],
             'status' => ['nullable', 'in:draft,published,closed'],
         ];
     }

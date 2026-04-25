@@ -25,10 +25,22 @@ class TimetableRepository extends BaseRepository
     {
         return $this->model->where('teacher_id', $teacherId)
             ->where('is_active', true)
-            ->with(['group.level.language', 'course'])
+            ->with(['group.level.language', 'group.students', 'course'])
             ->orderByRaw("FIELD(day_of_week, 'monday','tuesday','wednesday','thursday','friday','saturday','sunday')")
             ->orderBy('start_time')
             ->get();
+    }
+
+    public function getByStudent(int $studentId)
+    {
+        return $this->model->whereHas('group.students', function($query) use ($studentId) {
+            $query->where('users.id', $studentId);
+        })
+        ->where('is_active', true)
+        ->with(['group.level.language', 'course', 'teacher'])
+        ->orderByRaw("FIELD(day_of_week, 'monday','tuesday','wednesday','thursday','friday','saturday','sunday')")
+        ->orderBy('start_time')
+        ->get();
     }
 
     public function checkConflict(int $teacherId, string $day, string $start, string $end, ?int $excludeId = null)
