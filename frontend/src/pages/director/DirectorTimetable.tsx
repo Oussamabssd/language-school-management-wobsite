@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../services/api';
-import type { Timetable, Group, User, ApiResponse } from '../../types';
+import type { Timetable, Group, ApiResponse } from '../../types';
 import toast from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -21,7 +21,6 @@ const DAYS = [
 const DirectorTimetable: React.FC = () => {
   const [timetables, setTimetables] = useState<Timetable[]>([]);
   const [groups, setGroups] = useState<Group[]>([]);
-  const [teachers, setTeachers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedGroup, setSelectedGroup] = useState<string>('');
   
@@ -30,7 +29,6 @@ const DirectorTimetable: React.FC = () => {
   
   const [formData, setFormData] = useState({
     group_id: '',
-    teacher_id: '',
     day_of_week: 'monday',
     start_time: '09:00',
     end_time: '11:00',
@@ -41,16 +39,12 @@ const DirectorTimetable: React.FC = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [groupsRes, teachersRes] = await Promise.all([
-        api.get<ApiResponse<{data: Group[]}>>('/groups'),
-        api.get<ApiResponse<{data: User[]}>>('/teachers')
+      const [groupsRes] = await Promise.all([
+        api.get<ApiResponse<{data: Group[]}>>('/groups')
       ]);
       
       const groupsData = (groupsRes.data.data as any).data || groupsRes.data.data;
       setGroups(groupsData);
-      
-      const teachersData = (teachersRes.data.data as any).data || teachersRes.data.data;
-      setTeachers(teachersData);
       
       if (selectedGroup) {
         const res = await api.get<ApiResponse<Timetable[]>>(`/timetables/group/${selectedGroup}`);
@@ -205,18 +199,6 @@ const DirectorTimetable: React.FC = () => {
                   >
                     <option value="">Select a group</option>
                     {groups.map(g => <option key={g.id} value={g.id}>{g.name}</option>)}
-                  </select>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-slate-700">Teacher</label>
-                  <select 
-                    required
-                    value={formData.teacher_id}
-                    onChange={(e) => setFormData({...formData, teacher_id: e.target.value})}
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 outline-none bg-white"
-                  >
-                    <option value="">Select a teacher</option>
-                    {teachers.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
                   </select>
                 </div>
                 <div className="space-y-2">

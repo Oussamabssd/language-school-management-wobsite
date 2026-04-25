@@ -99,6 +99,13 @@ class User extends Authenticatable
         return $this->hasMany(Group::class, 'teacher_id');
     }
 
+    public function sessionGroups(): BelongsToMany
+    {
+        return $this->belongsToMany(Group::class, 'timetables', 'teacher_id', 'group_id')
+            ->distinct()
+            ->withTimestamps();
+    }
+
     public function courses(): HasMany
     {
         return $this->hasMany(Course::class, 'teacher_id');

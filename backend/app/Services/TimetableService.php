@@ -28,12 +28,22 @@ class TimetableService
 
     public function create(array $data): Timetable
     {
+        if (empty($data['teacher_id'])) {
+            $group = \App\Models\Group::findOrFail($data['group_id']);
+            $data['teacher_id'] = $group->teacher_id;
+        }
+
         $this->checkForConflicts($data);
         return $this->timetableRepository->create($data);
     }
 
     public function update(int $id, array $data): Timetable
     {
+        if (empty($data['teacher_id']) && isset($data['group_id'])) {
+            $group = \App\Models\Group::findOrFail($data['group_id']);
+            $data['teacher_id'] = $group->teacher_id;
+        }
+
         $this->checkForConflicts($data, $id);
         return $this->timetableRepository->update($id, $data);
     }

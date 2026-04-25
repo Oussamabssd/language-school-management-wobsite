@@ -13,6 +13,7 @@ export interface User {
   is_active: boolean;
   must_change_password: boolean;
   groups?: Group[];
+  teaching_groups?: Group[];
 }
 
 export interface Role {

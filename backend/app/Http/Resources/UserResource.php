@@ -27,6 +27,12 @@ class UserResource extends JsonResource
             'roles' => RoleResource::collection($this->whenLoaded('roles')),
             'teacher_profile' => new TeacherProfileResource($this->whenLoaded('teacherProfile')),
             'groups' => GroupResource::collection($this->whenLoaded('groups')),
+            'teaching_groups' => GroupResource::collection(
+                collect([])
+                    ->merge($this->whenLoaded('teachingGroups', $this->teachingGroups, collect([])))
+                    ->merge($this->whenLoaded('sessionGroups', $this->sessionGroups, collect([])))
+                    ->unique('id')
+            ),
             'created_at' => $this->created_at->toISOString(),
             'updated_at' => $this->updated_at->toISOString(),
         ];

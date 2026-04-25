@@ -106,6 +106,16 @@ class AuthController extends Controller
     )]
     public function me(Request $request): JsonResponse
     {
-        return $this->success(new UserResource($request->user()->load(['roles', 'groups', 'groups.level'])));
+        return $this->success(new UserResource($request->user()->load([
+            'roles', 
+            'groups', 
+            'groups.level', 
+            'teachingGroups', 
+            'teachingGroups.level',
+            'teachingGroups.students',
+            'sessionGroups',
+            'sessionGroups.level',
+            'sessionGroups.students'
+        ])));
     }
 }
