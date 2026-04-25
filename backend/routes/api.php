@@ -80,7 +80,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::apiResource('assignments', AssignmentController::class);
         Route::get('/assignments/course/{courseId}', [AssignmentController::class, 'byCourse']);
-        
+        Route::get('/assignments/student/{studentId}', [AssignmentController::class, 'byStudent']);
         // Assignment Submissions & Grading
         Route::get('/assignments/{id}/submissions', [AssignmentSubmissionController::class, 'getByAssignment']);
         Route::post('/assignments/{id}/students/{studentId}/grade', [AssignmentSubmissionController::class, 'storeGrade']);

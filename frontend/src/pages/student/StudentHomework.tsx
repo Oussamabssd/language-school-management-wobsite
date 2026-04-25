@@ -47,8 +47,7 @@ const StudentHomework: React.FC = () => {
       // Using the first group for now.
       const groupId = user.groups?.[0]?.id;
       if (groupId) {
-        const homeworkRes = await api.get<ApiResponse<Homework[]>>(`/assignments`); 
-        // Note: Filtered by course/group on backend is better, but let's assume we get relevant ones
+        const homeworkRes = await api.get<ApiResponse<Homework[]>>(`/assignments/student/${user.id}`); 
         const allHomework = (homeworkRes.data.data as any).data || homeworkRes.data.data;
         setHomeworks(allHomework);
 

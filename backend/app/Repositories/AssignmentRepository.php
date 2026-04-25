@@ -25,4 +25,14 @@ class AssignmentRepository extends BaseRepository
             ->with('course')
             ->paginate($perPage);
     }
+
+    public function getByStudent(int $studentId)
+    {
+        return $this->model->whereHas('course.group.students', function($query) use ($studentId) {
+            $query->where('users.id', $studentId);
+        })
+        ->with(['course.group', 'teacher'])
+        ->orderBy('due_date', 'desc')
+        ->get();
+    }
 }

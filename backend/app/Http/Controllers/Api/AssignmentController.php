@@ -43,4 +43,9 @@ class AssignmentController extends Controller
     {
         return $this->success(AssignmentResource::collection($this->assignmentService->getByCourse($courseId)));
     }
+
+    public function byStudent(int $studentId): JsonResponse
+    {
+        return $this->success(AssignmentResource::collection($this->assignmentService->getByStudent($studentId)));
+    }
 }

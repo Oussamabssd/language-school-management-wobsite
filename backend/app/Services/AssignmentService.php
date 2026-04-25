@@ -59,6 +59,11 @@ class AssignmentService
         return $this->assignmentRepository->getByCourse($courseId);
     }
 
+    public function getByStudent(int $studentId)
+    {
+        return $this->assignmentRepository->getByStudent($studentId);
+    }
+
     public function getByTeacher(int $teacherId, int $perPage = 15)
     {
         return $this->assignmentRepository->getByTeacher($teacherId, $perPage);
