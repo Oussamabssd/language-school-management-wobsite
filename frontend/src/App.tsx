@@ -18,6 +18,14 @@ import TeacherCourses from './pages/teacher/TeacherCourses';
 import TeacherAssignments from './pages/teacher/TeacherAssignments';
 import StudentHomework from './pages/student/StudentHomework';
 import StudentExamNotes from './pages/student/StudentExamNotes';
+import AnnouncementManagement from './pages/announcements/AnnouncementManagement';
+import AnnouncementList from './pages/announcements/AnnouncementList';
+import TeacherProfile from './pages/teacher/TeacherProfile';
+import TeacherApply from './pages/TeacherApply';
+import AdminTeacherApplications from './pages/admin/AdminTeacherApplications';
+import EmployeePayments from './pages/accountant/EmployeePayments';
+import StudentPayments from './pages/accountant/StudentPayments';
+import Expenses from './pages/accountant/Expenses';
 
 const Timetable = () => <div className="p-6"><h1 className="text-2xl font-bold">Timetable</h1></div>;
 const TeacherGrades = () => <div className="p-6"><h1 className="text-2xl font-bold">Manage Grades</h1></div>;
@@ -31,6 +39,7 @@ const App: React.FC = () => {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register-request" element={<PublicRegistration />} />
+          <Route path="/teacher-apply" element={<TeacherApply />} />
           <Route path="/unauthorized" element={<Unauthorized />} />
 
           {/* Protected Routes inside Dashboard Layout */}
@@ -50,6 +59,12 @@ const App: React.FC = () => {
                 <Route path="/director/timetable" element={<DirectorTimetable />} />
               </Route>
               
+              {/* Management Routes (Admin, Director, Secretary) */}
+              <Route element={<ProtectedRoute allowedRoles={['admin', 'director', 'secretary']} />}>
+                <Route path="/announcements" element={<AnnouncementManagement />} />
+                <Route path="/admin/teacher-applications" element={<AdminTeacherApplications />} />
+              </Route>
+
               {/* Common/Teacher Routes */}
               <Route element={<ProtectedRoute allowedRoles={['admin', 'director', 'teacher']} />}>
                 <Route path="/courses" element={<TeacherCourses />} />
@@ -57,14 +72,25 @@ const App: React.FC = () => {
                 <Route path="/assignments" element={<TeacherAssignments />} />
                 <Route path="/teacher/assignments" element={<TeacherAssignments />} />
                 <Route path="/teacher/grades" element={<TeacherGrades />} />
+                <Route path="/teacher/profile" element={<TeacherProfile />} />
                 <Route path="/timetable" element={<Timetable />} />
               </Route>
+              
+              {/* Feed Routes (All authenticated users can see the announcement feed) */}
+              <Route path="/announcements/feed" element={<AnnouncementList />} />
               
               {/* Student Routes */}
               <Route element={<ProtectedRoute allowedRoles={['student']} />}>
                 <Route path="/student/dashboard" element={<StudentDashboard />} />
                 <Route path="/student/homework" element={<StudentHomework />} />
                 <Route path="/student/grades" element={<StudentExamNotes />} />
+              </Route>
+              
+              {/* Accountant Routes */}
+              <Route element={<ProtectedRoute allowedRoles={['admin', 'accountant']} />}>
+                <Route path="/accountant/payments" element={<EmployeePayments />} />
+                <Route path="/accountant/student-payments" element={<StudentPayments />} />
+                <Route path="/accountant/expenses" element={<Expenses />} />
               </Route>
               
             </Route>

@@ -6,7 +6,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   UserPlus, Search, Filter, Edit2, Trash2, Shield, 
   Mail, Phone, Calendar, MapPin, X, Lock,
-  ChevronLeft, ChevronRight, Loader2
+  ChevronLeft, ChevronRight, Loader2,
+  FileText
 } from 'lucide-react';
 
 const AdminUsers: React.FC = () => {
@@ -283,6 +284,17 @@ const AdminUsers: React.FC = () => {
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-1">
+                        {user.roles.some(r => r.name === 'teacher') && user.teacher_profile?.cv_path && (
+                          <a 
+                            href={user.teacher_profile.cv_path}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="p-2 text-slate-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-all"
+                            title="View CV"
+                          >
+                            <FileText className="w-4 h-4" />
+                          </a>
+                        )}
                         <button 
                           onClick={() => handleEdit(user)}
                           className="p-2 text-slate-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-all"

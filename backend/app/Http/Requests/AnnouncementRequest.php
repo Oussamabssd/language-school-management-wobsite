@@ -16,7 +16,7 @@ class AnnouncementRequest extends FormRequest
         return [
             'title' => ['required', 'string', 'max:255'],
             'content' => ['required', 'string'],
-            'author_id' => ['required', 'exists:users,id'],
+            'author_id' => ['sometimes', 'exists:users,id'],
             'target_audience' => ['nullable', 'in:all,students,teachers,parents,staff'],
             'group_id' => ['nullable', 'exists:groups,id'],
             'priority' => ['nullable', 'in:low,medium,high,urgent'],

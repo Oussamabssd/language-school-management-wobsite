@@ -3,7 +3,8 @@ import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { 
   Users, BookOpen, Calendar, CreditCard, Bell, 
-  Home, LogOut, GraduationCap, ClipboardList, FileText
+  Home, LogOut, GraduationCap, ClipboardList, FileText, User as UserIcon,
+  Briefcase, DollarSign, ShoppingBag
 } from 'lucide-react';
 
 const Sidebar: React.FC = () => {
@@ -15,8 +16,14 @@ const Sidebar: React.FC = () => {
     if (hasRole('admin')) {
       links.push(
         { name: 'Users', to: '/admin/users', icon: <Users className="w-5 h-5" /> },
-        { name: 'Registrations', to: '/admin/registrations', icon: <ClipboardList className="w-5 h-5" /> },
-        { name: 'Announcements', to: '/announcements', icon: <Bell className="w-5 h-5" /> }
+        { name: 'Registrations', to: '/admin/registrations', icon: <ClipboardList className="w-5 h-5" /> }
+      );
+    }
+    
+    if (hasRole('admin') || hasRole('director') || hasRole('secretary')) {
+      links.push(
+        { name: 'Announcements', to: '/announcements', icon: <Bell className="w-5 h-5" /> },
+        { name: 'Teacher Jobs', to: '/admin/teacher-applications', icon: <Briefcase className="w-5 h-5" /> }
       );
     }
     
@@ -30,7 +37,9 @@ const Sidebar: React.FC = () => {
 
     if (hasRole('teacher')) {
       links.push(
+        { name: 'My Profile', to: '/teacher/profile', icon: <UserIcon className="w-5 h-5" /> },
         { name: 'My Courses', to: '/courses', icon: <BookOpen className="w-5 h-5" /> },
+        { name: 'Announcements', to: '/announcements/feed', icon: <Bell className="w-5 h-5" /> },
         { name: 'Timetable', to: '/timetable', icon: <Calendar className="w-5 h-5" /> },
         { name: 'Homework', to: '/teacher/assignments', icon: <FileText className="w-5 h-5" /> },
         { name: 'Grades', to: '/teacher/grades', icon: <GraduationCap className="w-5 h-5" /> }
@@ -42,6 +51,7 @@ const Sidebar: React.FC = () => {
       if (links[0].to === '/') links.shift();
       links.push(
         { name: 'My Academic', to: '/', icon: <BookOpen className="w-5 h-5" /> },
+        { name: 'Announcements', to: '/announcements/feed', icon: <Bell className="w-5 h-5" /> },
         { name: 'My Homework', to: '/student/homework', icon: <FileText className="w-5 h-5" /> },
         { name: 'Exam Results', to: '/student/grades', icon: <GraduationCap className="w-5 h-5" /> }
       );
@@ -49,7 +59,16 @@ const Sidebar: React.FC = () => {
 
     if (hasRole('accountant')) {
       links.push(
-        { name: 'Payments', to: '/accountant/payments', icon: <CreditCard className="w-5 h-5" /> }
+        { name: 'Employee Salaries', to: '/accountant/payments', icon: <DollarSign className="w-5 h-5" /> },
+        { name: 'Student Fees', to: '/accountant/student-payments', icon: <CreditCard className="w-5 h-5" /> },
+        { name: 'School Expenses', to: '/accountant/expenses', icon: <ShoppingBag className="w-5 h-5" /> }
+      );
+    }
+
+    if (hasRole('secretary')) {
+      links.push(
+        { name: 'Users', to: '/admin/users', icon: <Users className="w-5 h-5" /> },
+        { name: 'Registrations', to: '/admin/registrations', icon: <ClipboardList className="w-5 h-5" /> }
       );
     }
 

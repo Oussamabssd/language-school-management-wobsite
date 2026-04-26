@@ -96,6 +96,20 @@ class DemoDataSeeder extends Seeder
         );
         $accountant->roles()->syncWithoutDetaching(Role::where('name', 'accountant')->pluck('id'));
 
+        // ── Secretary ───────────────────────────────────────
+        $secretary = User::firstOrCreate(
+            ['email' => 'secretary@ecole.com'],
+            [
+                'name' => 'Laila Bensouda',
+                'first_name' => 'Laila',
+                'last_name' => 'Bensouda',
+                'password' => Hash::make('password'),
+                'phone' => '+212600000006',
+                'is_active' => true,
+            ]
+        );
+        $secretary->roles()->syncWithoutDetaching(Role::where('name', 'secretary')->pluck('id'));
+
         // ── Students ────────────────────────────────────────
         $students = [];
         $studentData = [

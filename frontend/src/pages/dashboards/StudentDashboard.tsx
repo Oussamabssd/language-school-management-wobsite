@@ -5,15 +5,16 @@ import type { Course, Timetable, ApiResponse } from '../../types';
 import { 
   BookOpen, Calendar, Users, 
   Clock, MapPin, GraduationCap,
-  ChevronRight, Loader2, AlertCircle
+  ChevronRight, Loader2, AlertCircle, FileText, X, Download
 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const StudentDashboard: React.FC = () => {
   const { user } = useAuth();
   const [courses, setCourses] = useState<Course[]>([]);
   const [timetables, setTimetables] = useState<Timetable[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
 
   const fetchStudentData = async () => {
     if (!user?.groups || user.groups.length === 0) {
@@ -104,7 +105,8 @@ const StudentDashboard: React.FC = () => {
                 <motion.div 
                   key={course.id}
                   whileHover={{ y: -4 }}
-                  className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-all group"
+                  onClick={() => setSelectedCourse(course)}
+                  className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-all group cursor-pointer"
                 >
                   <div className="flex justify-between items-start mb-4">
                     <div className="p-3 bg-blue-50 text-blue-600 rounded-2xl">
@@ -114,6 +116,19 @@ const StudentDashboard: React.FC = () => {
                   </div>
                   <h3 className="text-lg font-bold text-slate-800 mb-1">{course.title}</h3>
                   <p className="text-sm text-slate-500 line-clamp-2 mb-4">{course.description}</p>
+                  
+                  {course.file_path && (
+                    <a 
+                      href={course.file_path} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 mb-4 px-4 py-2 bg-slate-50 text-slate-700 rounded-xl text-xs font-bold hover:bg-primary-50 hover:text-primary-600 transition-colors"
+                    >
+                      <FileText className="w-4 h-4" />
+                      Download Materials
+                    </a>
+                  )}
+
                   <div className="flex items-center gap-4 pt-4 border-t border-slate-50">
                     <div className="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
                       <Clock className="w-4 h-4 text-slate-400" />
@@ -164,8 +179,87 @@ const StudentDashboard: React.FC = () => {
           </div>
         </div>
       </div>
+
+      <CourseDetailModal 
+        course={selectedCourse} 
+        onClose={() => setSelectedCourse(null)} 
+      />
     </div>
   );
 };
 
 export default StudentDashboard;
+
+// ── Course Detail Modal ───────────────────────────────────
+const CourseDetailModal: React.FC<{ course: Course | null, onClose: () => void }> = ({ course, onClose }) => (
+  <AnimatePresence>
+    {course && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={onClose}
+          className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
+        />
+        <motion.div
+          initial={{ scale: 0.95, opacity: 0, y: 20 }}
+          animate={{ scale: 1, opacity: 1, y: 0 }}
+          exit={{ scale: 0.95, opacity: 0, y: 20 }}
+          className="relative bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden"
+        >
+          <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+            <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
+              <BookOpen className="w-5 h-5 text-primary-600" />
+              Course Details
+            </h2>
+            <button onClick={onClose} className="p-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-white transition-all">
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+          <div className="p-8 space-y-6">
+            <div>
+              <h3 className="text-2xl font-bold text-slate-800 mb-2">{course.title}</h3>
+              <div className="flex flex-wrap gap-2 mb-6">
+                <span className="px-3 py-1 bg-primary-50 text-primary-700 rounded-full text-xs font-bold uppercase tracking-wider">
+                  {course.group?.name}
+                </span>
+                <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-bold uppercase tracking-wider">
+                  {course.status}
+                </span>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <h4 className="font-bold text-slate-700 uppercase text-xs tracking-widest">Description</h4>
+              <p className="text-slate-600 leading-relaxed whitespace-pre-wrap">
+                {course.description || 'No description provided.'}
+              </p>
+            </div>
+
+            {course.file_path && (
+              <div className="space-y-4 pt-6 border-t border-slate-50">
+                <h4 className="font-bold text-slate-700 uppercase text-xs tracking-widest">Learning Materials</h4>
+                <a 
+                  href={course.file_path} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100 group hover:border-primary-200 transition-all"
+                >
+                  <div className="p-3 bg-white text-primary-600 rounded-xl shadow-sm group-hover:bg-primary-600 group-hover:text-white transition-colors">
+                    <FileText className="w-6 h-6" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-bold text-slate-800">Course Document (PDF/DOC)</p>
+                    <p className="text-xs text-slate-500">Click to open or download</p>
+                  </div>
+                  <Download className="w-5 h-5 text-slate-400 group-hover:text-primary-600" />
+                </a>
+              </div>
+            )}
+          </div>
+        </motion.div>
+      </div>
+    )}
+  </AnimatePresence>
+);

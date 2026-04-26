@@ -15,6 +15,10 @@ use App\Http\Controllers\Api\RegistrationController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\TimetableController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\EmployeePaymentController;
+use App\Http\Controllers\StudentPaymentController;
+use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\ReceiptController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,6 +38,9 @@ Route::post('/registrations', [RegistrationController::class, 'store']);
 Route::get('/languages', [LanguageController::class, 'index']);
 Route::get('/languages/{languageId}/levels', [LevelController::class, 'byLanguage']);
 
+// Public Teacher Application
+Route::post('/teacher-applications', [\App\Http\Controllers\TeacherApplicationController::class, 'store']);
+
 // ── Authenticated Routes ───────────────────────────────────
 Route::middleware('auth:sanctum')->group(function () {
 
@@ -43,10 +50,14 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/me', [AuthController::class, 'me']);
     });
 
-    // ── Users & Roles (Admin) ──────────────────────────────
-    Route::middleware('role:admin')->group(function () {
+    // ── Users & Roles ──────────────────────────────────────
+    Route::middleware('role:admin,director,secretary,accountant')->group(function () {
+        Route::get('/users', [UserController::class, 'index']);
         Route::get('/roles', [RoleController::class, 'index']);
-        Route::apiResource('users', UserController::class);
+    });
+
+    Route::middleware('role:admin')->group(function () {
+        Route::apiResource('users', UserController::class)->except(['index']);
         Route::patch('/users/{id}/toggle-status', [UserController::class, 'toggleStatus']);
         Route::post('/users/{userId}/roles/{roleId}', [UserController::class, 'assignRole']);
         Route::delete('/users/{userId}/roles/{roleId}', [UserController::class, 'removeRole']);
@@ -60,6 +71,12 @@ Route::middleware('auth:sanctum')->group(function () {
     // ── Teachers (Admin, Director) ─────────────────────────
     Route::middleware('role:admin,director')->group(function () {
         Route::get('/teachers', [UserController::class, 'teachers']);
+    });
+
+    // ── Teacher Specific Routes ─────────────────────────────
+    Route::middleware('role:teacher')->group(function () {
+        Route::get('/teacher/profile', [\App\Http\Controllers\Api\TeacherController::class, 'getProfile']);
+        Route::post('/teacher/cv', [\App\Http\Controllers\Api\TeacherController::class, 'uploadCV']);
     });
 
     // ── Languages, Levels, Groups (Director) ───────────────
@@ -121,8 +138,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/payments/user/{userId}', [PaymentController::class, 'byUser']);
     });
 
-    // ── Announcements (Admin, Director, Teacher) ────────────
-    Route::middleware('role:admin,director,teacher')->group(function () {
+    // ── Announcements (Admin, Director, Secretary) ──
+    Route::middleware('role:admin,director,secretary')->group(function () {
         Route::apiResource('announcements', AnnouncementController::class);
     });
 
@@ -145,5 +162,28 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/registrations/{id}', [RegistrationController::class, 'show']);
         Route::put('/registrations/{id}/accept', [RegistrationController::class, 'accept']);
         Route::put('/registrations/{id}/reject', [RegistrationController::class, 'reject']);
+    });
+
+    // ── Teacher Applications (Admin, Director, Secretary) ──
+    Route::middleware('role:admin,director,secretary')->group(function () {
+        Route::get('/teacher-applications', [\App\Http\Controllers\TeacherApplicationController::class, 'index']);
+        Route::put('/teacher-applications/{application}/accept', [\App\Http\Controllers\TeacherApplicationController::class, 'accept']);
+        Route::put('/teacher-applications/{application}/reject', [\App\Http\Controllers\TeacherApplicationController::class, 'reject']);
+    });
+
+    // ── Finance (Accountant, Admin) ──────────────────────────
+    Route::middleware('role:accountant,admin')->group(function () {
+        Route::get('/employee-payments', [EmployeePaymentController::class, 'index']);
+        Route::post('/employee-payments', [EmployeePaymentController::class, 'store']);
+        Route::get('/employee-payments/{id}', [EmployeePaymentController::class, 'show']);
+
+        Route::get('/student-payments', [StudentPaymentController::class, 'index']);
+        Route::post('/student-payments', [StudentPaymentController::class, 'store']);
+        Route::get('/student-payments/{id}', [StudentPaymentController::class, 'show']);
+
+        Route::apiResource('expenses', ExpenseController::class);
+        
+        Route::get('/receipts', [ReceiptController::class, 'index']);
+        Route::get('/receipts/{id}', [ReceiptController::class, 'show']);
     });
 });

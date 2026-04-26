@@ -16,6 +16,7 @@ class RolePermissionSeeder extends Seeder
             ['name' => 'director', 'display_name' => 'Director', 'description' => 'School direction and management'],
             ['name' => 'teacher', 'display_name' => 'Teacher', 'description' => 'Teaching and course management'],
             ['name' => 'accountant', 'display_name' => 'Accountant', 'description' => 'Financial management'],
+            ['name' => 'secretary', 'display_name' => 'Secretary', 'description' => 'Administrative support and announcements'],
             ['name' => 'student', 'display_name' => 'Student', 'description' => 'Student access'],
             ['name' => 'parent', 'display_name' => 'Parent', 'description' => 'Parent/guardian access'],
         ];
@@ -96,6 +97,10 @@ class RolePermissionSeeder extends Seeder
                 'view_students', 'view_groups', 'manage_courses', 'view_courses',
                 'manage_assignments', 'manage_exams', 'manage_grades',
                 'manage_absences', 'manage_announcements', 'view_timetable',
+            ])->pluck('id')->toArray(),
+            'secretary' => Permission::whereIn('name', [
+                'view_students', 'view_groups', 'view_courses', 'manage_announcements',
+                'view_announcements', 'view_timetable', 'view_users',
             ])->pluck('id')->toArray(),
             'accountant' => Permission::whereIn('name', [
                 'manage_payments', 'view_payments', 'view_students', 'view_users',

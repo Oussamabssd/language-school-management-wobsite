@@ -14,6 +14,18 @@ export interface User {
   must_change_password: boolean;
   groups?: Group[];
   teaching_groups?: Group[];
+  teacher_profile?: TeacherProfile;
+}
+
+export interface TeacherProfile {
+  id: number;
+  user_id: number;
+  cv_path?: string;
+  specialization?: string;
+  bio?: string;
+  hire_date?: string;
+  hourly_rate?: string;
+  contract_type: 'full-time' | 'part-time' | 'freelance';
 }
 
 export interface Role {
@@ -110,5 +122,21 @@ export interface Course {
   status: 'draft' | 'active' | 'completed' | 'archived';
   group?: Group;
   teacher?: User;
+  created_at: string;
+}
+
+export interface Announcement {
+  id: number;
+  title: string;
+  content: string;
+  author_id: number;
+  target_audience: 'all' | 'students' | 'teachers' | 'parents' | 'staff';
+  group_id?: number | null;
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+  is_published: boolean;
+  published_at?: string | null;
+  expires_at?: string | null;
+  author?: User;
+  group?: Group;
   created_at: string;
 }

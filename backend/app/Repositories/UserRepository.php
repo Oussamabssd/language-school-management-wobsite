@@ -18,7 +18,9 @@ class UserRepository extends BaseRepository
 
     public function getUsersByRole(string $role, int $perPage = 15)
     {
-        return $this->model->whereHas('roles', fn($q) => $q->where('name', $role))
+        $roles = explode(',', $role);
+        return $this->model->whereHas('roles', fn($q) => $q->whereIn('name', $roles))
+            ->with(['roles', 'teacherProfile']) // Include profile for accountant view
             ->paginate($perPage);
     }
 
@@ -35,10 +37,11 @@ class UserRepository extends BaseRepository
         });
 
         if ($role) {
-            $query->whereHas('roles', fn($q) => $q->where('name', $role));
+            $roles = explode(',', $role);
+            $query->whereHas('roles', fn($q) => $q->whereIn('name', $roles));
         }
 
-        return $query->with('roles')->paginate($perPage);
+        return $query->with(['roles', 'teacherProfile'])->paginate($perPage);
     }
 
     public function getStudentsWithDetails(int $perPage = 15)

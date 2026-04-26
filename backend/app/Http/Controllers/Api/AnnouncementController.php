@@ -15,19 +15,19 @@ class AnnouncementController extends Controller
 
     public function index(Request $request): JsonResponse
     {
-        if ($request->has('audience')) {
+        if ($request->has('audience') && auth()->user()->hasAnyRole(['admin', 'director', 'secretary'])) {
             $announcements = $this->announcementService->getByAudience($request->input('audience'), $request->input('per_page', 15));
-        } elseif ($request->boolean('published_only', false)) {
-            $announcements = $this->announcementService->getPublished($request->input('per_page', 15));
         } else {
-            $announcements = $this->announcementService->getAll($request->input('per_page', 15));
+            $announcements = $this->announcementService->getForUser(auth()->user(), $request->input('per_page', 15));
         }
         return $this->success(AnnouncementResource::collection($announcements)->response()->getData(true));
     }
 
     public function store(AnnouncementRequest $request): JsonResponse
     {
-        return $this->success(new AnnouncementResource($this->announcementService->create($request->validated())), 'Announcement created', 201);
+        $data = $request->validated();
+        $data['author_id'] = auth()->id();
+        return $this->success(new AnnouncementResource($this->announcementService->create($data)), 'Announcement created', 201);
     }
 
     public function show(int $id): JsonResponse

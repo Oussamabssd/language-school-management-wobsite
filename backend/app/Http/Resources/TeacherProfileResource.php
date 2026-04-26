@@ -11,7 +11,7 @@ class TeacherProfileResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'cv_path' => $this->cv_path,
+            'cv_path' => $this->cv_path ? asset('storage/' . $this->cv_path) : null,
             'specialization' => $this->specialization,
             'bio' => $this->bio,
             'hire_date' => $this->hire_date?->format('Y-m-d'),

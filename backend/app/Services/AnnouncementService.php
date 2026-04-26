@@ -29,6 +29,11 @@ class AnnouncementService
         return $this->announcementRepository->getByAudience($audience, $perPage);
     }
 
+    public function getForUser($user, int $perPage = 15)
+    {
+        return $this->announcementRepository->getForUser($user, $perPage);
+    }
+
     public function getById(int $id)
     {
         return $this->announcementRepository->query()

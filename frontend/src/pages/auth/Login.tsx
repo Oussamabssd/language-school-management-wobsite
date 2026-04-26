@@ -111,14 +111,26 @@ const Login: React.FC = () => {
               </button>
             </form>
 
-            <div className="mt-8 pt-6 border-t border-slate-700/50 text-center">
-              <p className="text-slate-400 text-sm mb-4">New student?</p>
-              <button 
-                onClick={() => navigate('/register-request')}
-                className="w-full py-3 px-4 bg-white/5 hover:bg-white/10 text-white rounded-xl font-medium border border-slate-600 transition-all duration-200"
-              >
-                Apply for Registration
-              </button>
+            <div className="mt-8 pt-6 border-t border-slate-700/50 text-center space-y-4">
+              <div>
+                <p className="text-slate-400 text-sm mb-4">New student?</p>
+                <button 
+                  onClick={() => navigate('/register-request')}
+                  className="w-full py-3 px-4 bg-white/5 hover:bg-white/10 text-white rounded-xl font-medium border border-slate-600 transition-all duration-200"
+                >
+                  Apply for Registration
+                </button>
+              </div>
+              
+              <div>
+                <p className="text-slate-400 text-sm mb-4">Want to teach with us?</p>
+                <button 
+                  onClick={() => navigate('/teacher-apply')}
+                  className="w-full py-3 px-4 bg-primary-600/10 hover:bg-primary-600/20 text-primary-400 rounded-xl font-medium border border-primary-500/30 transition-all duration-200"
+                >
+                  Join as Teacher
+                </button>
+              </div>
             </div>
           </div>
         </div>
