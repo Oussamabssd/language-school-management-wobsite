@@ -15,7 +15,20 @@ class CourseController extends Controller
 
     public function index(Request $request): JsonResponse
     {
-        $courses = $this->courseService->getAll($request->input('per_page', 15));
+        $user = $request->user();
+        $query = \App\Models\Course::query();
+
+        if ($user->hasRole('student')) {
+            $groupIds = $user->groups->pluck('id');
+            $query->whereIn('group_id', $groupIds);
+        } elseif ($user->hasRole('parent')) {
+            $groupIds = $user->children()->with('groups')->get()->pluck('groups')->flatten()->pluck('id')->unique();
+            $query->whereIn('group_id', $groupIds);
+        } elseif ($user->hasRole('teacher')) {
+            $query->where('teacher_id', $user->id);
+        }
+
+        $courses = $query->with(['teacher', 'group'])->latest()->paginate($request->input('per_page', 15));
         return $this->success(CourseResource::collection($courses)->response()->getData(true));
     }
 

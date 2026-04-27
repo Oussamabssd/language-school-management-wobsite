@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface StatCardProps {
   title: string;
@@ -8,7 +8,13 @@ interface StatCardProps {
   trendUp?: boolean;
 }
 
-export const StatCard: React.FC<StatCardProps> = ({ title, value, icon, trend, trendUp }) => {
+export const StatCard: React.FC<StatCardProps> = ({
+  title,
+  value,
+  icon,
+  trend,
+  trendUp,
+}) => {
   return (
     <div className="bg-white rounded-2xl p-6 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] border border-slate-100 flex flex-col justify-between hover:shadow-lg transition-shadow duration-300">
       <div className="flex justify-between items-start">
@@ -22,7 +28,9 @@ export const StatCard: React.FC<StatCardProps> = ({ title, value, icon, trend, t
       </div>
       {trend && (
         <div className="mt-4 flex items-center text-sm">
-          <span className={`font-medium ${trendUp ? 'text-green-600' : 'text-red-500'}`}>
+          <span
+            className={`font-medium ${trendUp ? "text-green-600" : "text-red-500"}`}
+          >
             {trend}
           </span>
           <span className="text-slate-400 ml-2">vs last month</span>

@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 export interface User {
   id: number;
   name: string;
@@ -25,7 +27,7 @@ export interface TeacherProfile {
   bio?: string;
   hire_date?: string;
   hourly_rate?: string;
-  contract_type: 'full-time' | 'part-time' | 'freelance';
+  contract_type: "full-time" | "part-time" | "freelance";
 }
 
 export interface Role {
@@ -41,6 +43,8 @@ export interface Language {
 }
 
 export interface Level {
+  description: string;
+  order: number;
   id: number;
   name: string;
   language_id: number;
@@ -53,7 +57,7 @@ export interface Registration {
   phone: string;
   date_of_birth: string;
   address: string;
-  status: 'pending' | 'accepted' | 'rejected';
+  status: "pending" | "accepted" | "rejected";
   rejection_reason?: string;
   language?: Language;
   level?: Level;
@@ -90,7 +94,7 @@ export interface Group {
   teacher_id?: number;
   max_students: number;
   academic_year: string;
-  status: 'active' | 'inactive' | 'completed';
+  status: "active" | "inactive" | "completed";
   level?: Level;
   teacher?: User;
   students?: User[];
@@ -102,7 +106,14 @@ export interface Timetable {
   group_id: number;
   course_id?: number;
   teacher_id: number;
-  day_of_week: 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
+  day_of_week:
+    | "monday"
+    | "tuesday"
+    | "wednesday"
+    | "thursday"
+    | "friday"
+    | "saturday"
+    | "sunday";
   start_time: string;
   end_time: string;
   room?: string;
@@ -119,7 +130,7 @@ export interface Course {
   file_path?: string | null;
   start_date?: string;
   end_date?: string;
-  status: 'draft' | 'active' | 'completed' | 'archived';
+  status: "draft" | "active" | "completed" | "archived";
   group?: Group;
   teacher?: User;
   created_at: string;
@@ -130,9 +141,9 @@ export interface Announcement {
   title: string;
   content: string;
   author_id: number;
-  target_audience: 'all' | 'students' | 'teachers' | 'parents' | 'staff';
+  target_audience: "all" | "students" | "teachers" | "parents" | "staff";
   group_id?: number | null;
-  priority: 'low' | 'medium' | 'high' | 'urgent';
+  priority: "low" | "medium" | "high" | "urgent";
   is_published: boolean;
   published_at?: string | null;
   expires_at?: string | null;

@@ -15,7 +15,21 @@ class AssignmentController extends Controller
 
     public function index(Request $request): JsonResponse
     {
-        return $this->success(AssignmentResource::collection($this->assignmentService->getAll($request->input('per_page', 15)))->response()->getData(true));
+        $user = $request->user();
+        $query = \App\Models\Assignment::query();
+
+        if ($user->hasRole('student')) {
+            $groupIds = $user->groups->pluck('id');
+            $query->whereHas('course', fn($q) => $q->whereIn('group_id', $groupIds));
+        } elseif ($user->hasRole('parent')) {
+            $groupIds = $user->children()->with('groups')->get()->pluck('groups')->flatten()->pluck('id')->unique();
+            $query->whereHas('course', fn($q) => $q->whereIn('group_id', $groupIds));
+        } elseif ($user->hasRole('teacher')) {
+            $query->whereHas('course', fn($q) => $q->where('teacher_id', $user->id));
+        }
+
+        $assignments = $query->with(['course.teacher', 'course.group'])->latest()->paginate($request->input('per_page', 15));
+        return $this->success(AssignmentResource::collection($assignments)->response()->getData(true));
     }
 
     public function store(AssignmentRequest $request): JsonResponse

@@ -23,12 +23,12 @@ class ExamController extends Controller
         // If student, only show announced exams for their groups
         if ($user->hasRole('student')) {
             $groupIds = $user->groups->pluck('id');
-            $query->whereIn('group_id', $groupIds)->where('is_announced', true);
+            $query->whereIn('group_id', $groupIds);
         }
-        // If parent, only show announced exams for their children's groups
+        // If parent, show exams for their children's groups
         elseif ($user->hasRole('parent')) {
             $groupIds = $user->children()->with('groups')->get()->pluck('groups')->flatten()->pluck('id')->unique();
-            $query->whereIn('group_id', $groupIds)->where('is_announced', true);
+            $query->whereIn('group_id', $groupIds);
         }
         // Teachers see all exams related to their groups? Or just all? 
         // For now, let's keep all for staff, but maybe filter by teacher later.
