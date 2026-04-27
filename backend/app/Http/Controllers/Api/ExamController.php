@@ -17,7 +17,25 @@ class ExamController extends Controller
 
     public function index(Request $request): JsonResponse
     {
-        return $this->success(ExamResource::collection($this->examService->getAll($request->input('per_page', 15)))->response()->getData(true));
+        $user = $request->user();
+        $query = \App\Models\Exam::query();
+
+        // If student, only show announced exams for their groups
+        if ($user->hasRole('student')) {
+            $groupIds = $user->groups->pluck('id');
+            $query->whereIn('group_id', $groupIds)->where('is_announced', true);
+        }
+        // If parent, only show announced exams for their children's groups
+        elseif ($user->hasRole('parent')) {
+            $groupIds = $user->children()->with('groups')->get()->pluck('groups')->flatten()->pluck('id')->unique();
+            $query->whereIn('group_id', $groupIds)->where('is_announced', true);
+        }
+        // Teachers see all exams related to their groups? Or just all? 
+        // For now, let's keep all for staff, but maybe filter by teacher later.
+
+        $exams = $query->with(['course', 'group'])->latest()->paginate($request->input('per_page', 15));
+        
+        return $this->success(ExamResource::collection($exams)->response()->getData(true));
     }
 
     public function store(ExamRequest $request): JsonResponse

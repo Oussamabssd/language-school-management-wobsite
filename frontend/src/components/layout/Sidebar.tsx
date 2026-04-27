@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { 
   Users, BookOpen, Calendar, CreditCard, Bell, 
   Home, LogOut, GraduationCap, ClipboardList, FileText, User as UserIcon,
-  Briefcase, DollarSign, ShoppingBag
+  Briefcase, DollarSign, ShoppingBag, Heart, ClipboardCheck
 } from 'lucide-react';
 
 const Sidebar: React.FC = () => {
@@ -23,6 +23,7 @@ const Sidebar: React.FC = () => {
     if (hasRole('admin') || hasRole('director') || hasRole('secretary')) {
       links.push(
         { name: 'Announcements', to: '/announcements', icon: <Bell className="w-5 h-5" /> },
+        { name: 'Exam Schedule', to: '/admin/exams', icon: <ClipboardCheck className="w-5 h-5" /> },
         { name: 'Teacher Jobs', to: '/admin/teacher-applications', icon: <Briefcase className="w-5 h-5" /> }
       );
     }
@@ -42,7 +43,7 @@ const Sidebar: React.FC = () => {
         { name: 'Announcements', to: '/announcements/feed', icon: <Bell className="w-5 h-5" /> },
         { name: 'Timetable', to: '/timetable', icon: <Calendar className="w-5 h-5" /> },
         { name: 'Homework', to: '/teacher/assignments', icon: <FileText className="w-5 h-5" /> },
-        { name: 'Grades', to: '/teacher/grades', icon: <GraduationCap className="w-5 h-5" /> }
+        { name: 'Grade Students', to: '/teacher/grades', icon: <GraduationCap className="w-5 h-5" /> }
       );
     }
 
@@ -68,7 +69,15 @@ const Sidebar: React.FC = () => {
     if (hasRole('secretary')) {
       links.push(
         { name: 'Users', to: '/admin/users', icon: <Users className="w-5 h-5" /> },
-        { name: 'Registrations', to: '/admin/registrations', icon: <ClipboardList className="w-5 h-5" /> }
+        { name: 'Registrations', to: '/admin/registrations', icon: <ClipboardList className="w-5 h-5" /> },
+        { name: 'Exam Schedule', to: '/admin/exams', icon: <ClipboardCheck className="w-5 h-5" /> }
+      );
+    }
+
+    if (hasRole('parent')) {
+      links.push(
+        { name: 'My Children', to: '/parent/dashboard', icon: <Heart className="w-5 h-5" /> },
+        { name: 'Announcements', to: '/announcements/feed', icon: <Bell className="w-5 h-5" /> }
       );
     }
 

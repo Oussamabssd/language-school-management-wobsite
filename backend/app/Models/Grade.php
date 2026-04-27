@@ -11,12 +11,14 @@ class Grade extends Model
     use HasFactory;
 
     protected $fillable = [
-        'exam_id', 'student_id', 'score', 'remarks', 'graded_by'
+        'exam_id', 'student_id', 'grade', 'remark', 'teacher_id'
     ];
 
     protected function casts(): array
     {
-        return ['score' => 'decimal:2'];
+        return [
+            'grade' => 'decimal:2',
+        ];
     }
 
     public function exam(): BelongsTo
@@ -29,8 +31,8 @@ class Grade extends Model
         return $this->belongsTo(User::class, 'student_id');
     }
 
-    public function gradedBy(): BelongsTo
+    public function teacher(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'graded_by');
+        return $this->belongsTo(User::class, 'teacher_id');
     }
 }

@@ -4,7 +4,7 @@ import api from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
-import { KeyRound, Mail, Loader2 } from 'lucide-react';
+import { KeyRound, Mail, Loader2, GraduationCap, ArrowRight } from 'lucide-react';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -31,109 +31,137 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-100 to-primary-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[#f8fafc] flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <motion.div 
+          animate={{ 
+            scale: [1, 1.2, 1],
+            rotate: [0, 90, 0],
+            x: [0, 50, 0],
+            y: [0, 30, 0] 
+          }}
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          className="absolute -top-24 -left-24 w-96 h-96 bg-primary-100 rounded-full blur-[100px] opacity-60"
+        />
+        <motion.div 
+          animate={{ 
+            scale: [1, 1.3, 1],
+            rotate: [0, -90, 0],
+            x: [0, -40, 0],
+            y: [0, 60, 0] 
+          }}
+          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+          className="absolute -bottom-24 -right-24 w-[500px] h-[500px] bg-blue-100 rounded-full blur-[120px] opacity-60"
+        />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_center,transparent_0%,#f8fafc_70%)]" />
+      </div>
+
       <motion.div 
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-md"
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="w-full max-w-[440px] relative z-10"
       >
-        <div className="glass-dark rounded-3xl p-8 md:p-10 text-white relative overflow-hidden shadow-2xl border border-slate-700/50">
-          <div className="absolute top-0 right-0 -mr-16 -mt-16 w-48 h-48 bg-primary-500/20 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 left-0 -ml-16 -mb-16 w-48 h-48 bg-accent-500/20 rounded-full blur-3xl"></div>
-          
-          <div className="relative z-10">
-            <div className="flex justify-center mb-8">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-primary-500 to-primary-300 flex items-center justify-center text-white font-bold text-3xl shadow-lg">
-                E
+        <div className="bg-white/80 backdrop-blur-xl rounded-[40px] p-8 md:p-12 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.08)] border border-white">
+          <div className="text-center mb-10">
+            <motion.div 
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+              className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-tr from-primary-600 to-primary-400 shadow-xl shadow-primary-200 mb-6"
+            >
+              <GraduationCap className="w-10 h-10 text-white" />
+            </motion.div>
+            <h1 className="text-4xl font-black text-slate-900 tracking-tight mb-2">Welcome Back</h1>
+            <p className="text-slate-500 font-medium">Continue your learning journey</p>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-2">
+              <label className="text-sm font-bold text-slate-700 ml-1">Email Address</label>
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <Mail className="h-5 w-5 text-slate-400 group-focus-within:text-primary-500 transition-colors" />
+                </div>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full pl-12 pr-4 py-4 bg-slate-50/50 border border-slate-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 focus:bg-white transition-all font-medium"
+                  placeholder="name@company.com"
+                  required
+                />
               </div>
             </div>
-            
-            <h2 className="text-3xl font-bold text-center mb-2">Welcome Back</h2>
-            <p className="text-slate-400 text-center mb-8">Sign in to manage the language school</p>
 
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-1.5">Email Address</label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-                    <Mail className="h-5 w-5" />
-                  </div>
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 bg-slate-800/50 border border-slate-600 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
-                    placeholder="admin@ecole.com"
-                    required
-                  />
-                </div>
+            <div className="space-y-2">
+              <div className="flex justify-between items-center ml-1">
+                <label className="text-sm font-bold text-slate-700">Password</label>
+                <a href="#" className="text-xs font-bold text-primary-600 hover:text-primary-700 transition-colors">Forgot Password?</a>
               </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-1.5">Password</label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-                    <KeyRound className="h-5 w-5" />
-                  </div>
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 bg-slate-800/50 border border-slate-600 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
-                    placeholder="••••••••"
-                    required
-                  />
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <KeyRound className="h-5 w-5 text-slate-400 group-focus-within:text-primary-500 transition-colors" />
                 </div>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full pl-12 pr-4 py-4 bg-slate-50/50 border border-slate-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 focus:bg-white transition-all font-medium"
+                  placeholder="••••••••"
+                  required
+                />
               </div>
+            </div>
 
-              <div className="flex items-center justify-between mt-2">
-                <div className="flex items-center">
-                  <input id="remember" type="checkbox" className="h-4 w-4 rounded border-slate-600 text-primary-500 focus:ring-primary-500 bg-slate-800" />
-                  <label htmlFor="remember" className="ml-2 block text-sm text-slate-300">Remember me</label>
-                </div>
-                <a href="#" className="text-sm text-primary-400 hover:text-primary-300">Forgot password?</a>
+            <motion.button
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.98 }}
+              type="submit"
+              disabled={isLoading}
+              className="w-full py-4 bg-slate-900 hover:bg-slate-800 text-white rounded-2xl font-bold shadow-xl shadow-slate-200 transition-all duration-200 flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
+            >
+              {isLoading ? (
+                <Loader2 className="w-6 h-6 animate-spin" />
+              ) : (
+                <span className="flex items-center gap-2">
+                  Sign In <ArrowRight className="w-5 h-5" />
+                </span>
+              )}
+            </motion.button>
+          </form>
+
+          <div className="mt-12 space-y-4">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-slate-100"></div>
               </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-white px-4 text-slate-400 font-bold tracking-widest">New here?</span>
+              </div>
+            </div>
 
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full mt-6 py-3 px-4 bg-primary-600 hover:bg-primary-500 text-white rounded-xl font-medium shadow-lg shadow-primary-600/30 transition-all duration-200 flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
+            <div className="grid grid-cols-2 gap-4">
+              <button 
+                onClick={() => navigate('/register-request')}
+                className="py-3 px-4 bg-white hover:bg-slate-50 text-slate-700 rounded-xl text-sm font-bold border border-slate-200 transition-all flex items-center justify-center gap-2"
               >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin mr-2" />
-                    Signing in...
-                  </>
-                ) : (
-                  'Sign In'
-                )}
+                Student
               </button>
-            </form>
-
-            <div className="mt-8 pt-6 border-t border-slate-700/50 text-center space-y-4">
-              <div>
-                <p className="text-slate-400 text-sm mb-4">New student?</p>
-                <button 
-                  onClick={() => navigate('/register-request')}
-                  className="w-full py-3 px-4 bg-white/5 hover:bg-white/10 text-white rounded-xl font-medium border border-slate-600 transition-all duration-200"
-                >
-                  Apply for Registration
-                </button>
-              </div>
-              
-              <div>
-                <p className="text-slate-400 text-sm mb-4">Want to teach with us?</p>
-                <button 
-                  onClick={() => navigate('/teacher-apply')}
-                  className="w-full py-3 px-4 bg-primary-600/10 hover:bg-primary-600/20 text-primary-400 rounded-xl font-medium border border-primary-500/30 transition-all duration-200"
-                >
-                  Join as Teacher
-                </button>
-              </div>
+              <button 
+                onClick={() => navigate('/teacher-apply')}
+                className="py-3 px-4 bg-primary-50 hover:bg-primary-100 text-primary-700 rounded-xl text-sm font-bold border border-primary-100 transition-all flex items-center justify-center gap-2"
+              >
+                Teacher
+              </button>
             </div>
           </div>
         </div>
+
+        <p className="text-center mt-8 text-slate-400 text-sm font-medium">
+          &copy; 2026 Ecole Langues Management. All rights reserved.
+        </p>
       </motion.div>
     </div>
   );

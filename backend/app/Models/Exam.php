@@ -12,16 +12,16 @@ class Exam extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title', 'description', 'course_id', 'group_id',
-        'exam_date', 'duration_minutes', 'max_score', 'type', 'status'
+        'title', 'description', 'course_id', 'group_id', 'quarter',
+        'exam_date', 'start_time', 'end_time', 'classroom', 'max_score', 'type', 'status', 'is_announced'
     ];
 
     protected function casts(): array
     {
         return [
-            'exam_date' => 'datetime',
-            'duration_minutes' => 'integer',
+            'exam_date' => 'date',
             'max_score' => 'decimal:2',
+            'is_announced' => 'boolean',
         ];
     }
 

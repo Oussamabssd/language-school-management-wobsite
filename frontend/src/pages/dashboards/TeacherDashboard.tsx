@@ -6,7 +6,7 @@ import {
   Calendar, Users, 
   Clock, MapPin,
   ChevronRight, Loader2,
-  X
+  X, Trophy, GraduationCap, BarChart
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
@@ -118,6 +118,18 @@ const TeacherDashboard: React.FC = () => {
             <p className="text-xs text-blue-600 font-bold uppercase tracking-wider mb-1">Sessions</p>
             <h3 className="text-2xl font-bold text-slate-800">{timetables.length}</h3>
           </div>
+          <motion.button 
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => window.location.href = '/teacher/grades'}
+            className="bg-amber-50 px-6 py-4 rounded-2xl border border-amber-100 text-center cursor-pointer hover:bg-amber-100 transition-colors"
+          >
+            <p className="text-xs text-amber-600 font-bold uppercase tracking-wider mb-1">Academic</p>
+            <div className="flex items-center justify-center gap-2">
+              <Trophy className="w-5 h-5 text-amber-500" />
+              <h3 className="text-xl font-bold text-slate-800">Grades</h3>
+            </div>
+          </motion.button>
         </div>
       </div>
 

@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\AssignmentSubmissionController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\ExamController;
+use App\Http\Controllers\Api\GradeController;
 use App\Http\Controllers\Api\GroupController;
 use App\Http\Controllers\Api\LanguageController;
 use App\Http\Controllers\Api\LevelController;
@@ -83,8 +84,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware('role:admin,director')->group(function () {
         Route::apiResource('languages', LanguageController::class)->except(['index']);
         Route::apiResource('levels', LevelController::class)->except(['index']);
+    });
 
-        Route::apiResource('groups', GroupController::class);
+    Route::middleware('role:admin,director,teacher')->group(function () {
+        Route::get('/groups', [GroupController::class, 'index']);
+        Route::get('/groups/{id}', [GroupController::class, 'show']);
+    });
+
+    Route::middleware('role:admin,director')->group(function () {
+        Route::apiResource('groups', GroupController::class)->except(['index', 'show']);
         Route::post('/groups/{groupId}/students/{studentId}', [GroupController::class, 'addStudent']);
         Route::delete('/groups/{groupId}/students/{studentId}', [GroupController::class, 'removeStudent']);
     });
@@ -105,16 +113,24 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     // ── Exams & Grades (Director, Teacher) ──────────────────
-    Route::middleware('role:admin,director,teacher')->group(function () {
-        Route::apiResource('exams', ExamController::class);
-        Route::post('/grades', [ExamController::class, 'storeGrade']);
-        Route::put('/grades/{id}', [ExamController::class, 'updateGrade']);
-        Route::get('/grades/exam/{examId}', [ExamController::class, 'gradesByExam']);
+    Route::middleware('role:admin,director,teacher,student,parent')->group(function () {
+        Route::get('/exams', [ExamController::class, 'index']);
     });
 
-    // ── Grades (Student view) ──────────────────────────────
+    Route::middleware('role:admin,director,teacher')->group(function () {
+        Route::apiResource('exams', ExamController::class)->except(['index']);
+        Route::get('/grades', [GradeController::class, 'index']);
+        Route::post('/grades', [GradeController::class, 'store']);
+        Route::put('/grades/{id}', [GradeController::class, 'update']);
+        Route::get('/grades/ranking/{groupId}', [GradeController::class, 'groupRanking']);
+    });
+
+    // ── Grades (Student/Parent view) ────────────────────────
+    Route::middleware('role:student')->get('/student/grades', [GradeController::class, 'studentGrades']);
+    Route::middleware('role:parent')->get('/parent/students/{id}/grades', [GradeController::class, 'studentGrades']);
+
     Route::middleware('role:admin,director,teacher,student,parent')->group(function () {
-        Route::get('/grades/student/{studentId}', [ExamController::class, 'gradesByStudent']);
+        Route::get('/grades/student/{studentId}', [GradeController::class, 'studentGrades']);
     });
 
     // ── Absences (Teacher, Admin, Director) ─────────────────
@@ -186,4 +202,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/receipts', [ReceiptController::class, 'index']);
         Route::get('/receipts/{id}', [ReceiptController::class, 'show']);
     });
+
+    // ── Parent Monitoring ──────────────────────────────────
+    Route::middleware('role:parent')->prefix('parent')->group(function () {
+        Route::get('/students', [\App\Http\Controllers\Api\ParentController::class, 'students']);
+        Route::get('/students/{id}/absences', [\App\Http\Controllers\Api\ParentController::class, 'studentAbsences']);
+        Route::get('/students/{id}/timetable', [\App\Http\Controllers\Api\ParentController::class, 'studentTimetable']);
+        Route::get('/students/{id}/remarks', [\App\Http\Controllers\Api\ParentController::class, 'studentRemarks']);
+    });
+
 });

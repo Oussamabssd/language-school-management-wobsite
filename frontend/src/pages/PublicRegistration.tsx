@@ -4,7 +4,7 @@ import api from '../services/api';
 import type { Language, Level, ApiResponse } from '../types';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
-import { User, Mail, Phone, Calendar, MapPin, BookOpen, GraduationCap, Loader2, CheckCircle, Lock } from 'lucide-react';
+import { User, Mail, Phone, Calendar, MapPin, BookOpen, GraduationCap, Loader2, CheckCircle, Lock, Heart } from 'lucide-react';
 
 const PublicRegistration: React.FC = () => {
   const navigate = useNavigate();
@@ -23,6 +23,9 @@ const PublicRegistration: React.FC = () => {
     level_id: '',
     password: '',
     password_confirmation: '',
+    parent_name: '',
+    parent_email: '',
+    parent_phone: '',
   });
 
   useEffect(() => {
@@ -240,7 +243,58 @@ const PublicRegistration: React.FC = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-slate-100">
+            <div className="pt-6 border-t border-slate-100">
+              <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center">
+                <Heart className="w-5 h-5 mr-2 text-primary-500" /> Parent Information
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-sm font-semibold text-slate-700 flex items-center">
+                    <User className="w-4 h-4 mr-2 text-primary-500" /> Parent Full Name
+                  </label>
+                  <input
+                    type="text"
+                    name="parent_name"
+                    required
+                    value={formData.parent_name}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
+                    placeholder="Parent's Name"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-semibold text-slate-700 flex items-center">
+                    <Mail className="w-4 h-4 mr-2 text-primary-500" /> Parent Email
+                  </label>
+                  <input
+                    type="email"
+                    name="parent_email"
+                    required
+                    value={formData.parent_email}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
+                    placeholder="parent@example.com"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-semibold text-slate-700 flex items-center">
+                    <Phone className="w-4 h-4 mr-2 text-primary-500" /> Parent Phone
+                  </label>
+                  <input
+                    type="tel"
+                    name="parent_phone"
+                    required
+                    value={formData.parent_phone}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
+                    placeholder="Parent's Phone"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-slate-100">
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-slate-700 flex items-center">
                   <BookOpen className="w-4 h-4 mr-2 text-primary-500" /> Select Language

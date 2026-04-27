@@ -13,7 +13,9 @@ class Registration extends Model
     protected $fillable = [
         'full_name', 'email', 'phone', 'date_of_birth',
         'address', 'password', 'language_id', 'level_id',
-        'status', 'rejection_reason', 'reviewed_by', 'reviewed_at'
+        'status', 'rejection_reason', 'reviewed_by', 'reviewed_at',
+        'parent_name', 'parent_email', 'parent_phone',
+        'is_teacher_application', 'specialization', 'cv_path'
     ];
 
     protected function casts(): array

@@ -14,11 +14,11 @@ class GradeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'exam_id' => ['required', 'exists:exams,id'],
-            'student_id' => ['required', 'exists:users,id'],
-            'score' => ['required', 'numeric', 'min:0'],
-            'remarks' => ['nullable', 'string'],
-            'graded_by' => ['required', 'exists:users,id'],
+            'exam_id' => 'required|exists:exams,id',
+            'student_id' => 'required|exists:users,id',
+            'grade' => 'required|numeric|min:0',
+            'remark' => 'nullable|string',
+            'teacher_id' => 'required|exists:users,id'
         ];
     }
 }

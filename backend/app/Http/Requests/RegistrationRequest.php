@@ -23,6 +23,9 @@ class RegistrationRequest extends FormRequest
                 'password' => 'required|string|min:8',
                 'language_id' => 'required|exists:languages,id',
                 'level_id' => 'nullable|exists:levels,id',
+                'parent_name' => 'required|string|max:255',
+                'parent_email' => 'required|email|max:255',
+                'parent_phone' => 'required|string|max:20',
             ];
         }
 
