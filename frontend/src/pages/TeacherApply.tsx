@@ -48,7 +48,13 @@ const TeacherApply: React.FC = () => {
       setSubmitted(true);
       toast.success("Application submitted successfully!");
     } catch (error: any) {
-      toast.error(error.response?.data?.message || "Something went wrong");
+      if (error.response?.status === 422 && error.response?.data?.errors) {
+        const errors = error.response.data.errors;
+        const firstError = Object.values(errors)[0] as string[];
+        toast.error(firstError[0] || "Validation failed");
+      } else {
+        toast.error(error.response?.data?.message || "Something went wrong");
+      }
     } finally {
       setLoading(false);
     }

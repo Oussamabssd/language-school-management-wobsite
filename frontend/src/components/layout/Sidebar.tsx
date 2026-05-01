@@ -26,7 +26,11 @@ const Sidebar: React.FC = () => {
 
   const getNavLinks = () => {
     const links = [
-      { name: "Dashboard", to: "/dashboard", icon: <Home className="w-5 h-5" /> },
+      {
+        name: "Dashboard",
+        to: "/dashboard",
+        icon: <Home className="w-5 h-5" />,
+      },
     ];
 
     if (hasRole("admin")) {
@@ -100,11 +104,6 @@ const Sidebar: React.FC = () => {
           name: "Announcements",
           to: "/announcements/feed",
           icon: <Bell className="w-5 h-5" />,
-        },
-        {
-          name: "Timetable",
-          to: "/timetable",
-          icon: <Calendar className="w-5 h-5" />,
         },
         {
           name: "Homework",
@@ -184,7 +183,7 @@ const Sidebar: React.FC = () => {
     return links;
   };
 
-  const roleDisplay = user?.roles[0]?.display_name || "User";
+  const roleDisplay = user?.roles[0]?.name === "admin" ? "Secretary" : (user?.roles[0]?.display_name || "User");
 
   return (
     <div className="w-64 glass h-screen flex flex-col fixed left-0 top-0 z-10 border-r border-slate-200">
