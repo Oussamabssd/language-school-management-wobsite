@@ -144,7 +144,7 @@ const PublicRegistration: React.FC = () => {
             E
           </div>
           <h1 className="text-4xl font-extrabold text-slate-900 mb-3 tracking-tight">
-            Join Our Language School
+            Join SpeakUp School
           </h1>
           <p className="text-lg text-slate-600 max-w-lg mx-auto mb-4">
             Fill out the form below to start your language learning journey with

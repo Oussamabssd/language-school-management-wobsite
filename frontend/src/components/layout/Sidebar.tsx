@@ -19,13 +19,14 @@ import {
   Heart,
   ClipboardCheck,
 } from "lucide-react";
+import logo from "../../assets/ecole-logo.jpg";
 
 const Sidebar: React.FC = () => {
   const { user, hasRole, logout } = useAuth();
 
   const getNavLinks = () => {
     const links = [
-      { name: "Dashboard", to: "/", icon: <Home className="w-5 h-5" /> },
+      { name: "Dashboard", to: "/dashboard", icon: <Home className="w-5 h-5" /> },
     ];
 
     if (hasRole("admin")) {
@@ -36,29 +37,14 @@ const Sidebar: React.FC = () => {
           icon: <Users className="w-5 h-5" />,
         },
         {
-          name: "Groups",
-          to: "/admin/groups",
-          icon: <Users className="w-5 h-5" />,
-        },
-        {
           name: "Registrations",
           to: "/admin/registrations",
           icon: <ClipboardList className="w-5 h-5" />,
         },
-      );
-    }
-
-    if (hasRole("admin") || hasRole("director") || hasRole("secretary")) {
-      links.push(
         {
           name: "Announcements",
           to: "/announcements",
           icon: <Bell className="w-5 h-5" />,
-        },
-        {
-          name: "Exam Schedule",
-          to: "/admin/exams",
-          icon: <ClipboardCheck className="w-5 h-5" />,
         },
         {
           name: "Teacher Jobs",
@@ -76,14 +62,24 @@ const Sidebar: React.FC = () => {
           icon: <Users className="w-5 h-5" />,
         },
         {
-          name: "Courses",
-          to: "/courses",
+          name: "Academic",
+          to: "/admin/academic",
           icon: <BookOpen className="w-5 h-5" />,
         },
         {
           name: "Timetable",
           to: "/director/timetable",
           icon: <Calendar className="w-5 h-5" />,
+        },
+        {
+          name: "Courses",
+          to: "/courses",
+          icon: <BookOpen className="w-5 h-5" />,
+        },
+        {
+          name: "Exam Schedule",
+          to: "/admin/exams",
+          icon: <ClipboardCheck className="w-5 h-5" />,
         },
       );
     }
@@ -170,31 +166,6 @@ const Sidebar: React.FC = () => {
       );
     }
 
-    if (hasRole("secretary")) {
-      links.push(
-        {
-          name: "Users",
-          to: "/admin/users",
-          icon: <Users className="w-5 h-5" />,
-        },
-        {
-          name: "Groups",
-          to: "/admin/groups",
-          icon: <Users className="w-5 h-5" />,
-        },
-        {
-          name: "Registrations",
-          to: "/admin/registrations",
-          icon: <ClipboardList className="w-5 h-5" />,
-        },
-        {
-          name: "Exam Schedule",
-          to: "/admin/exams",
-          icon: <ClipboardCheck className="w-5 h-5" />,
-        },
-      );
-    }
-
     if (hasRole("parent")) {
       links.push(
         {
@@ -218,12 +189,12 @@ const Sidebar: React.FC = () => {
   return (
     <div className="w-64 glass h-screen flex flex-col fixed left-0 top-0 z-10 border-r border-slate-200">
       <div className="p-6 flex items-center space-x-3">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary-600 to-primary-400 flex items-center justify-center text-white font-bold text-xl shadow-md">
-          E
+        <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center overflow-hidden border border-slate-100 shadow-sm">
+          <img src={logo} alt="Logo" className="w-full h-full object-cover" />
         </div>
         <div>
           <h1 className="font-bold text-lg text-slate-800 leading-tight">
-            Ecole<span className="text-primary-600">Langues</span>
+            SpeakUp<span className="text-primary-600">School</span>
           </h1>
           <p className="text-xs text-slate-500 font-medium">
             Management System

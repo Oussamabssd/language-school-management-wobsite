@@ -8,9 +8,9 @@ import {
   KeyRound,
   Mail,
   Loader2,
-  GraduationCap,
   ArrowRight,
 } from "lucide-react";
+import logo from "../../assets/ecole-logo.jpg";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -28,7 +28,7 @@ const Login: React.FC = () => {
       const { token, user } = response.data.data;
       login(token, user);
       toast.success("Welcome back!");
-      navigate("/");
+      navigate("/dashboard");
     } catch (error: any) {
       toast.error(error.response?.data?.message || "Login failed");
     } finally {
@@ -75,9 +75,9 @@ const Login: React.FC = () => {
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-              className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-tr from-primary-600 to-primary-400 shadow-xl shadow-primary-200 mb-6"
+              className="inline-flex items-center justify-center w-24 h-24 rounded-3xl bg-white shadow-xl shadow-slate-200 mb-6 overflow-hidden border border-slate-100"
             >
-              <GraduationCap className="w-10 h-10 text-white" />
+              <img src={logo} alt="SpeakUp School" className="w-full h-full object-cover" />
             </motion.div>
             <h1 className="text-4xl font-black text-slate-900 tracking-tight mb-2">
               Welcome Back
@@ -181,7 +181,7 @@ const Login: React.FC = () => {
         </div>
 
         <p className="text-center mt-8 text-slate-400 text-sm font-medium">
-          &copy; 2026 Ecole Langues Management. All rights reserved.
+          &copy; 2026 SpeakUp School Management. All rights reserved.
         </p>
       </motion.div>
     </div>

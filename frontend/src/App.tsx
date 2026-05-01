@@ -12,6 +12,8 @@ import Login from "./pages/auth/Login";
 import DashboardLayout from "./components/layout/DashboardLayout";
 import ProtectedRoute from "./components/layout/ProtectedRoute";
 import DashboardHome from "./pages/DashboardHome";
+import LandingPage from "./pages/LandingPage";
+import { useAuth } from "./context/AuthContext";
 import PublicRegistration from "./pages/PublicRegistration";
 import AdminRegistrations from "./pages/admin/AdminRegistrations";
 import AdminUsers from "./pages/admin/AdminUsers";
@@ -47,6 +49,11 @@ const Unauthorized = () => (
   </div>
 );
 
+const HomeRouter = () => {
+  const { isAuthenticated } = useAuth();
+  return isAuthenticated ? <Navigate to="/dashboard" replace /> : <LandingPage />;
+};
+
 const App: React.FC = () => {
   return (
     <Router>
@@ -58,21 +65,17 @@ const App: React.FC = () => {
           <Route path="/teacher-apply" element={<TeacherApply />} />
           <Route path="/unauthorized" element={<Unauthorized />} />
 
+          <Route path="/" element={<HomeRouter />} />
+
           {/* Protected Routes inside Dashboard Layout */}
           <Route element={<ProtectedRoute />}>
             <Route element={<DashboardLayout />}>
-              <Route path="/" element={<DashboardHome />} />
+              <Route path="/dashboard" element={<DashboardHome />} />
 
               <Route
-                element={
-                  <ProtectedRoute
-                    allowedRoles={["admin", "director", "secretary"]}
-                  />
-                }
+                element={<ProtectedRoute allowedRoles={["admin"]} />}
               >
                 <Route path="/admin/users" element={<AdminUsers />} />
-                <Route path="/admin/groups" element={<AdminGroups />} />
-                <Route path="/admin/academic" element={<AdminAcademic />} />
                 <Route
                   path="/admin/registrations"
                   element={<AdminRegistrations />}
@@ -81,23 +84,19 @@ const App: React.FC = () => {
 
               {/* Director Routes */}
               <Route
-                element={
-                  <ProtectedRoute allowedRoles={["admin", "director"]} />
-                }
+                element={<ProtectedRoute allowedRoles={["director"]} />}
               >
+                <Route path="/admin/groups" element={<AdminGroups />} />
+                <Route path="/admin/academic" element={<AdminAcademic />} />
                 <Route
                   path="/director/timetable"
                   element={<DirectorTimetable />}
                 />
               </Route>
 
-              {/* Management Routes (Admin, Director, Secretary) */}
+              {/* Admin only Management Routes */}
               <Route
-                element={
-                  <ProtectedRoute
-                    allowedRoles={["admin", "director", "secretary"]}
-                  />
-                }
+                element={<ProtectedRoute allowedRoles={["admin"]} />}
               >
                 <Route
                   path="/announcements"
@@ -107,6 +106,12 @@ const App: React.FC = () => {
                   path="/admin/teacher-applications"
                   element={<AdminTeacherApplications />}
                 />
+              </Route>
+
+              {/* Director only Management Routes */}
+              <Route
+                element={<ProtectedRoute allowedRoles={["director"]} />}
+              >
                 <Route path="/admin/exams" element={<AdminExams />} />
               </Route>
 

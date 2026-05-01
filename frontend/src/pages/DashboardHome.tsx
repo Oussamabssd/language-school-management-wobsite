@@ -1,6 +1,7 @@
 import React from "react";
 import { useAuth } from "../context/AuthContext";
 import AdminDashboard from "./dashboards/AdminDashboard";
+import DirectorDashboard from "./dashboards/DirectorDashboard";
 import TeacherDashboard from "./dashboards/TeacherDashboard";
 import StudentDashboard from "./dashboards/StudentDashboard";
 import { motion } from "framer-motion";
@@ -9,6 +10,7 @@ const DashboardHome: React.FC = () => {
   const { user, hasRole } = useAuth();
 
   if (hasRole("admin")) return <AdminDashboard />;
+  if (hasRole("director")) return <DirectorDashboard />;
   if (hasRole("teacher")) return <TeacherDashboard />;
   if (hasRole("student")) return <StudentDashboard />;
 

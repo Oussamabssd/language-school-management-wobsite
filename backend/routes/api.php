@@ -51,13 +51,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/me', [AuthController::class, 'me']);
     });
 
-    // ── Users & Roles ──────────────────────────────────────
-    Route::middleware('role:admin,director,secretary,accountant')->group(function () {
+    Route::middleware('role:admin')->group(function () {
         Route::get('/users', [UserController::class, 'index']);
         Route::get('/roles', [RoleController::class, 'index']);
-    });
-
-    Route::middleware('role:admin')->group(function () {
         Route::apiResource('users', UserController::class)->except(['index']);
         Route::patch('/users/{id}/toggle-status', [UserController::class, 'toggleStatus']);
         Route::post('/users/{userId}/roles/{roleId}', [UserController::class, 'assignRole']);
@@ -81,7 +77,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     // ── Languages, Levels, Groups (Director) ───────────────
-    Route::middleware('role:admin,director')->group(function () {
+    Route::middleware('role:director')->group(function () {
         Route::apiResource('languages', LanguageController::class)->except(['index']);
         Route::apiResource('levels', LevelController::class)->except(['index']);
     });
@@ -91,7 +87,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/groups/{id}', [GroupController::class, 'show']);
     });
 
-    Route::middleware('role:admin,director')->group(function () {
+    Route::middleware('role:director')->group(function () {
         Route::apiResource('groups', GroupController::class)->except(['index', 'show']);
         Route::post('/groups/{groupId}/students/{studentId}', [GroupController::class, 'addStudent']);
         Route::delete('/groups/{groupId}/students/{studentId}', [GroupController::class, 'removeStudent']);
@@ -154,16 +150,16 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/payments/user/{userId}', [PaymentController::class, 'byUser']);
     });
 
-    // ── Announcements (Admin, Director, Secretary) ──
-    Route::middleware('role:admin,director,secretary')->group(function () {
+    // ── Announcements (Admin) ──
+    Route::middleware('role:admin')->group(function () {
         Route::apiResource('announcements', AnnouncementController::class);
     });
 
     // ── Announcements (All authenticated - read only) ───────
     Route::get('/announcements-feed', [AnnouncementController::class, 'index']);
 
-    // ── Timetable (Director, Admin) ─────────────────────────
-    Route::middleware('role:admin,director')->group(function () {
+    // ── Timetable (Director) ─────────────────────────
+    Route::middleware('role:director')->group(function () {
         Route::apiResource('timetables', TimetableController::class);
     });
 
@@ -180,8 +176,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/registrations/{id}/reject', [RegistrationController::class, 'reject']);
     });
 
-    // ── Teacher Applications (Admin, Director, Secretary) ──
-    Route::middleware('role:admin,director,secretary')->group(function () {
+    // ── Teacher Applications (Admin) ──
+    Route::middleware('role:admin')->group(function () {
         Route::get('/teacher-applications', [\App\Http\Controllers\TeacherApplicationController::class, 'index']);
         Route::put('/teacher-applications/{application}/accept', [\App\Http\Controllers\TeacherApplicationController::class, 'accept']);
         Route::put('/teacher-applications/{application}/reject', [\App\Http\Controllers\TeacherApplicationController::class, 'reject']);

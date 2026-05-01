@@ -188,7 +188,7 @@ const AdminUsers: React.FC = () => {
         <div>
           <h1 className="text-2xl font-bold text-slate-800">User Management</h1>
           <p className="text-slate-500">
-            Manage school staff, parents and directors
+            Manage students, school staff, parents and directors
           </p>
         </div>
         <button
@@ -229,7 +229,6 @@ const AdminUsers: React.FC = () => {
           >
             <option value="">All Roles</option>
             {roles
-              .filter((r) => r.name !== "student")
               .map((role) => (
                 <option key={role.id} value={role.name}>
                   {role.display_name}
@@ -564,7 +563,6 @@ const AdminUsers: React.FC = () => {
                       >
                         <option value="">Select a role</option>
                         {roles
-                          .filter((r) => r.name !== "student")
                           .map((role) => (
                             <option key={role.id} value={role.id}>
                               {role.display_name}
